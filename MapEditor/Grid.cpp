@@ -16,6 +16,9 @@ Grid::Grid(const sf::Vector2f& position
 	
 	m_vLine.resize(m_totalLines.x);
 	m_hLine.resize(m_totalLines.y);
+	m_size = sf::Vector2f
+	((m_tileAmount.x * m_tileSize.x * m_scale.x) + m_lineThickness
+		, m_tileAmount.y * m_tileSize.y * m_scale.y);
 }
 
 Grid::~Grid()
@@ -26,9 +29,7 @@ Grid::~Grid()
 
 void Grid::Initialize()
 {
-	m_size = sf::Vector2f
-	((m_tileAmount.x * m_tileSize.x * m_scale.x) + m_lineThickness
-		, m_tileAmount.y * m_tileSize.y * m_scale.y);
+	
 	for (size_t i = 0; i < m_totalLines.x; i++)
 	{
 		m_vLine[i].setSize(sf::Vector2f(m_lineThickness, m_size.y));

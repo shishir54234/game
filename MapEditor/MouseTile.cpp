@@ -3,8 +3,8 @@
 
 MouseTile::MouseTile(
 	const Grid &grid,
-	const sf::Vector2i& tileSize, 
-	const sf::Vector2f& tileScale, const sf::Vector2f&offset)
+	const sf::Vector2f& tileSize, 
+	const sf::Vector2i& tileScale, const sf::Vector2f&offset)
 	: m_grid(grid), m_tileSize(tileSize), m_tileScale(tileScale), 
 	m_tile(m_tileSheet), m_offset(offset), m_isMouseOnGrid(false)
 {
@@ -19,8 +19,9 @@ void MouseTile::Initialize()
 	m_tile.setTexture(m_tileSheet);
 	// 11 the magic number lol 
 	m_currentTileID = 11;
-	m_tile.setTextureRect(sf::IntRect({ m_currentTileID*m_tileSize.x, 0 }, { m_tileSize.x, m_tileSize.y }));
-	m_tile.setScale(m_tileScale);
+	m_tile.setTextureRect(sf::IntRect({ (int)m_currentTileID*(int)m_tileSize.x, 0 }, 
+		{ (int)m_tileSize.x, (int)m_tileSize.y }));
+	m_tile.setScale((sf::Vector2f)m_tileScale);
 	m_tile.setPosition(m_offset);
 }
 void MouseTile::Load()
@@ -33,8 +34,8 @@ void MouseTile::Update(double deltaTime, const sf::Vector2f &mousePosition)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 	{
 		m_currentTileID=12; 
-		m_tile.setTextureRect
-		(sf::IntRect({ m_currentTileID * m_tileSize.x, 0 }, { m_tileSize.x, m_tileSize.y }));
+		m_tile.setTextureRect(sf::IntRect({ (int)m_currentTileID * (int)m_tileSize.x, 0 },
+			{ (int)m_tileSize.x, (int)m_tileSize.y }));
 	}
 	const sf::Vector2f& gridPosition = m_grid.GetPosition();
 	const sf::Vector2f& gridSize = m_grid.GetSize();
@@ -52,8 +53,8 @@ void MouseTile::Update(double deltaTime, const sf::Vector2f &mousePosition)
 			(mousePosition.y - m_offset.y) / (m_tileSize.y * m_tileScale.y);
 		
 		
-		std::cout << "Tile Grid Position " 
-		<< m_tileGridPosition.x << " " << m_tileGridPosition.y << std::endl;
+	/*	std::cout << "Tile Grid Position " 
+		<< m_tileGridPosition.x << " " << m_tileGridPosition.y << std::endl;*/
 
 		m_tilePosition.x
 			= m_tileGridPosition.x * (m_tileSize.x * m_tileScale.x) + m_offset.x;

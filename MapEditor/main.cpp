@@ -3,7 +3,7 @@
 #include "MouseTile.h"
 #include "Map.h"
 #include "MapSaver.h"
-
+#include "MapSelector.h"
 #include <iostream>
 
 
@@ -13,26 +13,43 @@ int main()
     sf::ContextSettings settings;
     settings.antiAliasingLevel = 8;
     sf::RenderWindow window(sf::VideoMode({ 1920,1080 }), "RPG game", sf::Style::Default);
-    Grid grid(
-        sf::Vector2f(100, 50),
-        sf::Vector2i(16, 16),
+    // grid constructor ==> (topleftposition, cellsize, totalCells, scale, color)
+    Grid grid1(
+        sf::Vector2f(0, 0),
+        sf::Vector2i(8, 8),
+        sf::Vector2i(10, 5),
+        sf::Vector2i(10, 10),
+        sf::Color(255, 255, 255, 128),
+        2);
+	std::cout << "Grid1 Position " << (grid1.GetTopRightBoundary()).x << " "
+        << (grid1.GetTopRightBoundary()).y << std::endl;
+    Grid grid2(
+        grid1.GetTopRightBoundary() + sf::Vector2f(50,0),
+        sf::Vector2i(8, 8),
         sf::Vector2i(10, 5),
         sf::Vector2i(10, 10),
         sf::Color(255, 255, 255, 128),
         2);
 
-    MouseTile mouseTile(grid, sf::Vector2i(16, 16), 
-        sf::Vector2f(10, 10),
-        sf::Vector2f(100,50));
+
+
+    // Mouse Tile Constructor ==> grid, tileSize, tileScale, offset
+    MouseTile mouseTile(
+        grid1, 
+        grid1.GetSize(),
+        grid1.GetScale(),
+        grid1.GetOffset());
     
-    Map map(grid,mouseTile);
+    Map map(grid1,mouseTile);
+	MapSelector mapSelector(grid2);
 
     MapSaver mapsaver;
     // ------------------------------------INIT-------------------------------------------------
-    grid.Initialize();
+    grid1.Initialize();
+    grid2.Initialize();
     mouseTile.Initialize();
 	map.Initialize();
-    //MapLoader mapLoader;
+	mapSelector.Initialize();
 
 
 
@@ -40,8 +57,11 @@ int main()
 
   
     //  ------------------------------------LOAD--------------
-    grid.Load();
-    mouseTile.Load();
+    grid1.Load();
+	grid2.Load();
+	mapSelector.Load();
+    /*
+    mouseTile.Load();*/
     map.Load();
 
     sf::Clock clock;
@@ -67,18 +87,21 @@ int main()
 
         
         
-		mouseTile.Update(deltaTime, mousePosition);
+	    mouseTile.Update(deltaTime, mousePosition);
         map.Update(deltaTime, mousePosition);
-        grid.Update(deltaTime);
-
+        grid1.Update(deltaTime);
+		grid2.Update(deltaTime);
 		// -------------------------UPDATE -------------------------------
 
 		// -------------------------DRAW -------------------------------
 
         window.clear(sf::Color::Black);
-		grid.Draw(window);
+        grid2.Draw(window);
+		grid1.Draw(window);
 		mouseTile.Draw(window);
 		map.Draw(window);
+		mapSelector.Draw(window);
+
         window.display();
 
     }

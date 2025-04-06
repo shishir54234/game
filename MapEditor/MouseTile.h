@@ -12,8 +12,8 @@ private:
 	
 	sf::Vector2f m_tilePosition;
 	sf::Vector2i m_tileGridPosition;
-	sf::Vector2i m_tileSize;
-	sf::Vector2f m_tileScale;
+	sf::Vector2f m_tileSize;
+	sf::Vector2i m_tileScale;
 	sf::Vector2f m_offset;
 
 	bool m_isMouseOnGrid;
@@ -21,8 +21,9 @@ private:
 public:
 	MouseTile(
 		const Grid& grid, 
-		const sf::Vector2i& tileSize, 
-		const sf::Vector2f& tileScale, const sf::Vector2f &offset);
+		const sf::Vector2f& tileSize, 
+		const sf::Vector2i& tileScale, 
+		const sf::Vector2f &offset);
 	~MouseTile();
 	void Initialize();
 	void Load();
