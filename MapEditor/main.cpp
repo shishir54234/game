@@ -34,11 +34,13 @@ int main()
 
 
     // Mouse Tile Constructor ==> grid, tileSize, tileScale, offset
+    std::cout << "Grid1 Size " << (grid1.GetSize()).x << " "
+        << (grid1.GetSize()).y << std::endl;
     MouseTile mouseTile(
         grid1, 
-        grid1.GetSize(),
+        sf::Vector2f(8,8),
         grid1.GetScale(),
-        grid1.GetOffset());
+        grid1.GetPosition());
     
     Map map(grid1,mouseTile);
 	MapSelector mapSelector(grid2);
@@ -76,12 +78,6 @@ int main()
         {
             if (event->is<sf::Event::Closed>())
                 window.close();
-            /*if (event->is<sf::Event::MouseLeft>())
-            {
-                std::cout << "Event handled\n";
-                 sf::Vector2f mousePosition = sf::Vector2f(sf::Mouse::getPosition(window));
-                 
-            }*/
         }
         sf::Vector2f mousePosition = sf::Vector2f(sf::Mouse::getPosition(window));
         if (mapSelector.ClickedOnSelector(mousePosition))
@@ -102,9 +98,10 @@ int main()
 
         window.clear(sf::Color::Black);
         mapSelector.Draw(window);
+        mouseTile.Draw(window);
         grid2.Draw(window);
 		grid1.Draw(window);
-		mouseTile.Draw(window);
+		
 		map.Draw(window);
 		
 

@@ -59,28 +59,15 @@ void MapSelector::Load()
 
 void MapSelector::Update(double deltaTime, const sf::Vector2f& mousePosition)
 {
-    //// have to add drag drop as well, 
-    //// so that we can select the tile and drag it to the map
-    //if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-    //{
-    //    sf::Vector2f tilePosition;
-    //    sf::Vector2i gridPosition;
-    //    if (ClickedOnSelector(tilePosition, gridPosition, mousePosition))
-    //    {
-    //        int i = gridPosition.x + gridPosition.y * 10;
-    //        assert(i < tiles.size());
-    //        m_currentTileID = tiles[i].first;
-    //        std::cout << "Current Tile ID " << m_currentTileID << std::endl;
-    //    }
-    //}
+
 }
 sf::IntRect MapSelector::GetClickedRect(
     const sf::Vector2f& mousePosition) const
 {
     // only called after Clicked on Selector returns true
     
-     int gx = (mousePosition.x - m_grid.GetPosition().x) / (m_grid.GetCellSize().x);
-     int gy = (mousePosition.y - m_grid.GetPosition().y) / (m_grid.GetCellSize().y);
+     int gx = (mousePosition.x - m_grid.GetPosition().x) / (m_grid.GetCellSize().x * m_grid.GetScale().x);
+     int gy = (mousePosition.y - m_grid.GetPosition().y) / (m_grid.GetCellSize().y * m_grid.GetScale().y);
 
 
      int i = gx + 10 * gy;
@@ -90,13 +77,18 @@ sf::IntRect MapSelector::GetClickedRect(
 bool MapSelector::ClickedOnSelector(
     const sf::Vector2f& mousePosition) const
 {
-    const sf::Vector2f& gridPosition = m_grid.GetPosition();
-    const sf::Vector2f& gridSize = m_grid.GetSize();
-    if (mousePosition.x >= gridPosition.x && mousePosition.x < gridPosition.x + gridSize.x &&
-        mousePosition.y >= gridPosition.y && mousePosition.y < gridPosition.y + gridSize.y)
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
     {
-        return true;
+        const sf::Vector2f& gridPosition = m_grid.GetPosition();
+        const sf::Vector2f& gridSize = m_grid.GetSize();
+        if (mousePosition.x >= gridPosition.x && mousePosition.x < gridPosition.x + gridSize.x &&
+            mousePosition.y >= gridPosition.y && mousePosition.y < gridPosition.y + gridSize.y)
+        {
+			std::cout << "Clicked on selector\n";
+            return true;
+        }
     }
+    
     return false;
 }
 

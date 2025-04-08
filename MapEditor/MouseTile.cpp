@@ -15,7 +15,15 @@ MouseTile::~MouseTile()
 }
 void MouseTile::Initialize()
 {
-	m_tileSheet.loadFromFile("Assets/Map/Prison/tiles/tilesheet.png");
+	if(m_tileSheet.loadFromFile("Assets/Map/Prison/tiles/tilesheet.png"))
+	{
+		std::cout << "Loaded succe\n";
+		
+	}
+	else 
+	{
+		abort();
+	}
 	m_tile.setTexture(m_tileSheet);
 	
 	m_currentTileID = 11;
@@ -26,6 +34,9 @@ void MouseTile::Initialize()
 }
 void MouseTile::InitializeFromMapSelector(sf::IntRect rect)
 {
+	std::cout << "New rectangle is " << "\n";
+	std::cout << rect.size.x << " " << rect.size.y << std::endl;
+	std::cout << rect.position.x << " " << rect.position.y << std::endl;	
 	m_tile.setTextureRect(rect);
 	m_tile.setScale((sf::Vector2f)m_tileScale);
 	m_tile.setPosition(m_offset);
@@ -59,22 +70,22 @@ void MouseTile::Update(double deltaTime, const sf::Vector2f &mousePosition)
 			(mousePosition.y - m_offset.y) / (m_tileSize.y * m_tileScale.y);
 		
 		
-	/*	std::cout << "Tile Grid Position " 
-		<< m_tileGridPosition.x << " " << m_tileGridPosition.y << std::endl;*/
+	//std::cout << "Tile Grid Position " 
+		//<< m_tileGridPosition.x << " " << m_tileGridPosition.y << std::endl;
 
 		m_tilePosition.x
 			= m_tileGridPosition.x * (m_tileSize.x * m_tileScale.x) + m_offset.x;
 		m_tilePosition.y 
 			= m_tileGridPosition.y * (m_tileSize.y * m_tileScale.y) + m_offset.y;
 
-		//std::cout << "Actual Tile Position " << 
-		//m_tilePosition.x << " " << m_tilePosition.y << std::endl; 
+	/*	std::cout << "Actual Tile Position " << 
+		m_tilePosition.x << " " << m_tilePosition.y << std::endl; */
 		m_tile.setPosition(m_tilePosition);
 		
 	}
 	else
 	{
-		//std::cout << "Not on the grid anymore\n" << std::endl;
+		/*std::cout << "Not on the grid anymore\n" << std::endl;*/
 		m_isMouseOnGrid = false;
 	}
 
