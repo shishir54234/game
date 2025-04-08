@@ -37,7 +37,7 @@ public:
 	inline const sf::Vector2i& GetScale() const { return m_scale; }
 	inline const sf::Vector2f& GetOffset() const { return m_position; }	
 	inline const sf::Vector2i GetTotalCells() const { return m_tileAmount; }
-	inline const sf::Vector2f& GetCellSize() const { return m_size; }
+	inline const sf::Vector2i& GetCellSize() const { return m_tileSize; }
 	inline sf::Vector2f GetTopRightBoundary() const
 	{
 		return sf::Vector2f(m_position.x + (m_size.x), m_position.y);

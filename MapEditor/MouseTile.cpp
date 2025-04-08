@@ -17,10 +17,16 @@ void MouseTile::Initialize()
 {
 	m_tileSheet.loadFromFile("Assets/Map/Prison/tiles/tilesheet.png");
 	m_tile.setTexture(m_tileSheet);
-	// 11 the magic number lol 
+	
 	m_currentTileID = 11;
 	m_tile.setTextureRect(sf::IntRect({ (int)m_currentTileID*(int)m_tileSize.x, 0 }, 
 		{ (int)m_tileSize.x, (int)m_tileSize.y }));
+	m_tile.setScale((sf::Vector2f)m_tileScale);
+	m_tile.setPosition(m_offset);
+}
+void MouseTile::InitializeFromMapSelector(sf::IntRect rect)
+{
+	m_tile.setTextureRect(rect);
 	m_tile.setScale((sf::Vector2f)m_tileScale);
 	m_tile.setPosition(m_offset);
 }
@@ -44,7 +50,7 @@ void MouseTile::Update(double deltaTime, const sf::Vector2f &mousePosition)
 		mousePosition.y >= gridPosition.y && mousePosition.y < gridPosition.y + gridSize.y)
 	{
 		
-		//std::cout << "Hey you are on on the grid !!" << "\n";
+		
 		m_isMouseOnGrid = true;
 		//std::cout<<"MousePos" << mousePosition.x << " " << mousePosition.y << std::endl;
 		m_tileGridPosition.x = 

@@ -29,7 +29,7 @@ public:
 	void Load();
 	void Update(double deltaTime, const sf::Vector2f &mousePosition);
 	void Draw(sf::RenderWindow &window);
-
+	void InitializeFromMapSelector(sf::IntRect);
 
 	/// <summary>
 	/// Returns whether the mouse was clicked on a tile or not and the position of the tile.

@@ -45,7 +45,7 @@ void Map::Draw(sf::RenderWindow& window)
 	{
 		if (m_mapSprites[i])
 		{
-			std::cout << i << std::endl;
+			/*std::cout << i << std::endl;*/
 			window.draw(*m_mapSprites[i].get());
 		}
 	}

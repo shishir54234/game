@@ -84,7 +84,12 @@ int main()
             }*/
         }
         sf::Vector2f mousePosition = sf::Vector2f(sf::Mouse::getPosition(window));
-
+        if (mapSelector.ClickedOnSelector(mousePosition))
+        {
+			sf::IntRect rect = mapSelector.GetClickedRect(mousePosition);
+            mouseTile.InitializeFromMapSelector(rect);
+            std::cout << "Initialised this\n"; 
+        }
         
         
 	    mouseTile.Update(deltaTime, mousePosition);
@@ -96,11 +101,12 @@ int main()
 		// -------------------------DRAW -------------------------------
 
         window.clear(sf::Color::Black);
+        mapSelector.Draw(window);
         grid2.Draw(window);
 		grid1.Draw(window);
 		mouseTile.Draw(window);
 		map.Draw(window);
-		mapSelector.Draw(window);
+		
 
         window.display();
 

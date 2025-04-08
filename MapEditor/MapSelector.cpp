@@ -15,7 +15,9 @@ void MapSelector::AddTilesToVector()
 {
     // we need to get the Tiles from the tilesheet and then we add it
     int width = 16, height = 16;
-    for (int y = 0; y < 5; y++)
+	m_width = width;
+	m_height = height;
+    for (int y = 0; y < 1; y++)
     {
         for (int x = 0; x < 10; x++)
         {
@@ -27,13 +29,15 @@ void MapSelector::AddTilesToVector()
            
             sprite.setTextureRect(sf::IntRect({ x*width, y*height }, { width, height }));
             sf::Vector2f pos;
-            pos.x = m_grid.GetOffset().x + x * m_grid.m_tileSize.x;
-            pos.y = m_grid.GetOffset().y + y * m_grid.m_tileSize.y;
-            std::cout << pos.x << " " << pos.y << std::endl;
+            
 			int g1 = m_grid.GetScale().x; int g2 = m_grid.GetScale().y;
-			sprite.setScale(sf::Vector2f(g1,g2)); // Set the scale of the sprite to match the grid scale
+            pos.x = m_grid.GetOffset().x + x * m_grid.m_tileSize.x * (g1);
+            pos.y = m_grid.GetOffset().y + y * m_grid.m_tileSize.y * (g2);
+
+            std::cout << "Index " << i << " " << pos.x << " " << pos.y << std::endl;
+            sprite.setPosition(pos);
+			sprite.setScale(sf::Vector2f(g1/2,g2/2)); // Set the scale of the sprite to match the grid scale
             // we need to fit in 
-           sprite.setPosition(pos);
             tiles.push_back(( std::make_unique<sf::Sprite>(std::move(sprite)) ));
         }
     }
@@ -70,11 +74,29 @@ void MapSelector::Update(double deltaTime, const sf::Vector2f& mousePosition)
     //    }
     //}
 }
-
-bool MapSelector::ClickedOnSelector(sf::Vector2f& tilePosition,
-    sf::Vector2i& gridPosition,
+sf::IntRect MapSelector::GetClickedRect(
     const sf::Vector2f& mousePosition) const
 {
+    // only called after Clicked on Selector returns true
+    
+     int gx = (mousePosition.x - m_grid.GetPosition().x) / (m_grid.GetCellSize().x);
+     int gy = (mousePosition.y - m_grid.GetPosition().y) / (m_grid.GetCellSize().y);
+
+
+     int i = gx + 10 * gy;
+     return sf::IntRect({ gx * m_width, gy * m_height }, { m_width, m_height });
+    
+}
+bool MapSelector::ClickedOnSelector(
+    const sf::Vector2f& mousePosition) const
+{
+    const sf::Vector2f& gridPosition = m_grid.GetPosition();
+    const sf::Vector2f& gridSize = m_grid.GetSize();
+    if (mousePosition.x >= gridPosition.x && mousePosition.x < gridPosition.x + gridSize.x &&
+        mousePosition.y >= gridPosition.y && mousePosition.y < gridPosition.y + gridSize.y)
+    {
+        return true;
+    }
     return false;
 }
 

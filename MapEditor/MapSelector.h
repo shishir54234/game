@@ -12,7 +12,7 @@ private:
 	std::vector<std::unique_ptr<sf::Sprite>> tiles;
 	sf::Vector2f m_tilePosition;
 	sf::Texture m_tilesheetTexture;
-
+	int m_width, m_height;
 	
 public:
 	MapSelector(Grid& grid);
@@ -23,8 +23,8 @@ public:
 	void Draw(sf::RenderWindow& window);
 	void AddTilesToVector();
 	bool ClickedOnSelector(
-		sf::Vector2f& tilePosition,
-		sf::Vector2i& gridPosition,
+		const sf::Vector2f& mousePosition) const;
+	sf::IntRect GetClickedRect(
 		const sf::Vector2f& mousePosition) const;
 	//inline const std::vector<std::pair<int, sf::Sprite>>& GetTiles() const { return tiles; };
 	inline int GetCurrentTileID() const { return m_currentTileID; };
