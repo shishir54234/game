@@ -25,20 +25,20 @@ void MouseTile::Initialize()
 		abort();
 	}
 	m_tile.setTexture(m_tileSheet);
-	
+	// 11 the default number
 	m_currentTileID = 11;
 	m_tile.setTextureRect(sf::IntRect({ (int)m_currentTileID*(int)m_tileSize.x, 0 }, 
 		{ (int)m_tileSize.x, (int)m_tileSize.y }));
 	m_tile.setScale((sf::Vector2f)m_tileScale);
 	m_tile.setPosition(m_offset);
 }
+
+// we get the new images bounds in that rect
 void MouseTile::InitializeFromMapSelector(sf::IntRect rect)
 {
-	std::cout << "New rectangle is " << "\n";
-	std::cout << rect.size.x << " " << rect.size.y << std::endl;
-	std::cout << rect.position.x << " " << rect.position.y << std::endl;	
 	m_tile.setTextureRect(rect);
-	m_tile.setScale((sf::Vector2f)m_tileScale);
+	sf::Vector2f newSize = sf::Vector2f(m_tileScale.x/2,m_tileScale.y/2);
+	m_tile.setScale(newSize);
 	m_tile.setPosition(m_offset);
 }
 void MouseTile::Load()
@@ -47,13 +47,6 @@ void MouseTile::Load()
 
 void MouseTile::Update(double deltaTime, const sf::Vector2f &mousePosition)
 {
-	
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-	{
-		m_currentTileID=12; 
-		m_tile.setTextureRect(sf::IntRect({ (int)m_currentTileID * (int)m_tileSize.x, 0 },
-			{ (int)m_tileSize.x, (int)m_tileSize.y }));
-	}
 	const sf::Vector2f& gridPosition = m_grid.GetPosition();
 	const sf::Vector2f& gridSize = m_grid.GetSize();
 
@@ -63,23 +56,14 @@ void MouseTile::Update(double deltaTime, const sf::Vector2f &mousePosition)
 		
 		
 		m_isMouseOnGrid = true;
-		//std::cout<<"MousePos" << mousePosition.x << " " << mousePosition.y << std::endl;
 		m_tileGridPosition.x = 
 			(mousePosition.x - m_offset.x) / (m_tileSize.x * m_tileScale.x);
 		m_tileGridPosition.y = 
 			(mousePosition.y - m_offset.y) / (m_tileSize.y * m_tileScale.y);
-		
-		
-	//std::cout << "Tile Grid Position " 
-		//<< m_tileGridPosition.x << " " << m_tileGridPosition.y << std::endl;
-
 		m_tilePosition.x
 			= m_tileGridPosition.x * (m_tileSize.x * m_tileScale.x) + m_offset.x;
 		m_tilePosition.y 
 			= m_tileGridPosition.y * (m_tileSize.y * m_tileScale.y) + m_offset.y;
-
-	/*	std::cout << "Actual Tile Position " << 
-		m_tilePosition.x << " " << m_tilePosition.y << std::endl; */
 		m_tile.setPosition(m_tilePosition);
 		
 	}

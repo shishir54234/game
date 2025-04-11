@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-class Bullet
+#include "Entity.h"
+class Bullet : public Entity
 {
 public:
     sf::Vector2f direction;

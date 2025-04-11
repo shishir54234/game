@@ -1,22 +1,23 @@
 #include "Player.h"
-#include "Math.h"
+#include "../Math.h"
 #include <iostream>
 
-Player::Player() :playerSprite(playerTexture)
+Player::Player(float width, float height) :playerSprite(playerTexture)
 
 {
-    //// Initialize playerSprite with the playerTexture
-    //playerSprite.setTexture(playerTexture);
-    boundingRectangle.setFillColor(sf::Color::Transparent);
-    boundingRectangle.setOutlineColor(sf::Color::Red);
-    boundingRectangle.setOutlineThickness(1);
-    boundingRectangle.setSize(sf::Vector2f(width, height));
-    boundingRectangle.setScale({ scaleX,scaleY });
+    m_size = sf::Vector2f(width, height);
+
+
+    m_boundingRectangle.setFillColor(sf::Color::Transparent);
+    m_boundingRectangle.setOutlineColor(sf::Color::Red);
+    m_boundingRectangle.setOutlineThickness(1);
+    m_boundingRectangle.setSize(sf::Vector2f(m_size.x, m_size.y));
+    m_boundingRectangle.setScale({ m_scale.x,m_scale.y });
 }
 
 void Player::Initialize()
 {
-    size = sf::Vector2f(width,height);
+    
 }
 void Player::Load()
 {
@@ -28,8 +29,8 @@ void Player::Load()
     playerSprite.setTexture(playerTexture);
 
     float XIndex = 0,YIndex=0;
-    playerSprite.setTextureRect(sf::IntRect({ (int)XIndex* (int)size.x,(int)YIndex* (int)size.y}, { (int)width,(int)height }));
-    playerSprite.setScale({ scaleX,scaleY });
+    playerSprite.setTextureRect(sf::IntRect({ (int)XIndex* (int)m_size.x,(int)YIndex* (int)m_size.y}, { (int)m_size.x,(int)m_size.y }));
+    playerSprite.setScale(m_scale);
     playerSprite.setPosition(sf::Vector2f(1650, 800));
 }
 void Player::Update(double deltaTime, Enemy &ene)
@@ -88,7 +89,7 @@ void Player::Update(double deltaTime, Enemy &ene)
 	
     bullets = vb;
     vb.clear();
-    boundingRectangle.setPosition(playerSprite.getPosition());
+    m_boundingRectangle.setPosition(playerSprite.getPosition());
 }
 
 void Player::DrawUpdate()
@@ -103,7 +104,7 @@ void Player::Shoot(Bullet &b)
 void Player::Draw(sf::RenderWindow &w)
 {
     w.draw(playerSprite);
-    w.draw(boundingRectangle);
+    w.draw(m_boundingRectangle);
     for (auto& x : bullets)
     {
 		x.Draw(w);  

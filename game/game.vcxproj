@@ -128,7 +128,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp23</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -154,27 +155,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\MapData.cpp" />
-    <ClCompile Include="src\MapLoader.cpp" />
-    <ClCompile Include="src\Bullet.cpp" />
-    <ClCompile Include="src\Enemy.cpp" />
-    <ClCompile Include="src\FrameRate.cpp" />
+    <ClCompile Include="src\Map\Grid.cpp" />
+    <ClCompile Include="src\EntityManager.cpp" />
+    <ClCompile Include="src\Map\MapData.cpp" />
+    <ClCompile Include="src\Map\MapLoader.cpp" />
+    <ClCompile Include="src\Entities\Bullet.cpp" />
+    <ClCompile Include="src\Entities\Enemy.cpp" />
+    <ClCompile Include="src\Components\FrameRate.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Map.cpp" />
+    <ClCompile Include="src\Map\Map.cpp" />
     <ClCompile Include="src\Math.cpp" />
-    <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Entities\Player.cpp" />
+    <ClCompile Include="src\Map\TileReader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\MapData.h" />
-    <ClInclude Include="src\MapLoader.h" />
-    <ClInclude Include="src\Bullet.h" />
-    <ClInclude Include="src\Enemy.h" />
-    <ClInclude Include="src\FrameRate.h" />
-    <ClInclude Include="src\Map.h" />
+    <ClInclude Include="src\Map\Grid.h" />
+    <ClInclude Include="src\Entities\Entity.h" />
+    <ClInclude Include="src\EntityManager.h" />
+    <ClInclude Include="src\Map\MapData.h" />
+    <ClInclude Include="src\Map\MapLoader.h" />
+    <ClInclude Include="src\Entities\Bullet.h" />
+    <ClInclude Include="src\Entities\Enemy.h" />
+    <ClInclude Include="src\Components\FrameRate.h" />
+    <ClInclude Include="src\Map\Map.h" />
     <ClInclude Include="src\Math.h" />
-    <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\Entities\Player.h" />
     <ClInclude Include="src\resource.h" />
-    <ClInclude Include="src\Tile.h" />
+    <ClInclude Include="src\Map\Tiles\Tile.h" />
+    <ClInclude Include="src\Map\TileReader.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\game.rc" />

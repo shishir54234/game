@@ -1,15 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-class Enemy
+#include "Entity.h"
+class Enemy : public Entity
 {
 
 	sf::Texture playerTexture;
 	sf::Vector2f size;
 	sf::RectangleShape boundingRectangle;
-	float width = 85;
-	float height = 94;
-	float scaleX = 3;
-	float scaleY = 3;
 	sf::Text healthText;
 	sf::Font font;
 	// Attributes

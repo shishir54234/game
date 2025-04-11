@@ -1,8 +1,9 @@
 #include <SFML/Graphics.hpp>
-#include "Player.h"
-#include "Enemy.h"
-#include "FrameRate.h"
-#include "Map.h"
+#include "Entities/Player.h"
+#include "Entities/Enemy.h"
+#include "Components/FrameRate.h"
+#include "Map/Map.h"
+#include "Map/Grid.h"
 #include <iostream>
 
 
@@ -14,13 +15,13 @@ int main()
     sf::RenderWindow window(sf::VideoMode({1920,1080}), "RPG game",sf::Style::Default);
     // ------------------------------------INIT-------------------------------------------------
     Enemy enemy;
-    Player player;
+    Player player(32.0f,32.0f);
     FrameRate fr;
     Map map;
     
     //MapLoader mapLoader;
     
-
+    Grid grid;
 
     enemy.Initialize();
     player.Initialize();
@@ -29,6 +30,7 @@ int main()
     //  ------------------------------------LOAD--------------
     player.Load();
     fr.Load();
+    grid.Load(window);
     enemy.Load();
     map.Load("Assets/Map/Prison/tiles/level1.rmap");
     // ------------------------------------ENEMY-----------------------------------------------
@@ -66,10 +68,13 @@ int main()
 
 
         window.clear(sf::Color::Green);
+        
+        grid.Draw(window);
         map.Draw(window);
 		fr.Draw(window);
         player.Draw(window);
         enemy.Draw(window);
+        
         window.display();
 
     }

@@ -1,5 +1,5 @@
 #pragma once
-#include "Tile.h"
+#include "Tiles/Tile.h"
 #include "MapLoader.h"
 #include "MapData.h"
 #include <SFML/Graphics.hpp>

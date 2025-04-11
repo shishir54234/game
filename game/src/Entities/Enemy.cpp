@@ -2,16 +2,19 @@
 #include <iostream>
 Enemy::Enemy() :playerSprite(playerTexture), healthText(font)
 {
+    m_scale = sf::Vector2f(3.0f, 3.0f);
+	m_size = sf::Vector2f(85.0f, 94.0f);
+
+
 
     boundingRectangle.setFillColor(sf::Color::Transparent);
     boundingRectangle.setOutlineColor(sf::Color::Red);
     boundingRectangle.setOutlineThickness(1);
-    boundingRectangle.setSize(sf::Vector2f(width, height));
-    boundingRectangle.setScale({ scaleX,scaleY });
+    boundingRectangle.setSize(m_size);
+    boundingRectangle.setScale(m_scale);
 }
 void Enemy::Initialize()
 {
-    size = sf::Vector2f(85, 94);
 }
 void Enemy::Load()
 {     if (font.openFromFile("Assets/Font/arial.ttf"))
@@ -36,7 +39,7 @@ void Enemy::Load()
     float XIndex = 0;
     float YIndex = 0;
     playerSprite.setTextureRect(sf::IntRect({ (int)XIndex * (int)size.x,(int)YIndex * (int)size.y }, { (int)size.x,(int)size.y }));
-    playerSprite.setScale({ 3.0f,3.0f });
+    playerSprite.setScale(m_scale);
     playerSprite.setPosition(sf::Vector2f(400, 100));
 }
 
