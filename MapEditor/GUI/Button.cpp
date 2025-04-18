@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-	Button::Button(const sf::Vector2f& position, const sf::Vector2f& scale) :
+	Button::Button(sf::Vector2f position, const sf::Vector2f& scale) :
 		m_position(position), m_scale(scale), m_mousePosition(nullptr), 
 		isMousePressed(false), isMouseReleased(false)
 	{
@@ -19,7 +19,13 @@
 
 	void Button::Load()
 	{
-		m_texture.loadFromFile("Assets/button/button.png");
+		if (m_texture.loadFromFile("Assets/Button/buttons.png"))
+		{
+			std::cout << "Button loaded successfully\n"; 
+		}
+		else {
+			abort();
+		}
 		m_sprite =  new sf::Sprite(m_texture);
 		m_sprite->setTextureRect(sf::IntRect({0,0}, {291,64}));
 		m_sprite->setPosition(m_position);

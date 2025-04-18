@@ -42,6 +42,10 @@ public:
 	{
 		return sf::Vector2f(m_position.x + (m_size.x), m_position.y);
 	}
+	inline sf::Vector2f GetBottomLeftBoundary() const
+	{
+		return sf::Vector2f(m_position.x, m_position.y +(m_size.y));
+	}
 	
 };
 

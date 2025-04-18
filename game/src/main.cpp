@@ -4,6 +4,7 @@
 #include "Components/FrameRate.h"
 #include "Map/Map.h"
 #include "Map/Grid.h"
+#include "Map/TileReader.h"
 #include <iostream>
 
 
@@ -18,11 +19,12 @@ int main()
     Player player(32.0f,32.0f);
     FrameRate fr;
     Map map;
-    
+	TileReader tileReader;
     //MapLoader mapLoader;
     
     Grid grid;
 
+	
     enemy.Initialize();
     player.Initialize();
     fr.Initialize();
@@ -33,9 +35,10 @@ int main()
     grid.Load(window);
     enemy.Load();
     map.Load("Assets/Map/Prison/tiles/level1.rmap");
+    tileReader.loadRMap("Assets/Map/Prison/tiles/TileClass.rmap");
     // ------------------------------------ENEMY-----------------------------------------------
     
-    
+    1
     
 
     // -------------------------------------HERO--------------------------------------------------------------

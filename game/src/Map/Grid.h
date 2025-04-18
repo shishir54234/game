@@ -2,10 +2,12 @@
 #include <iostream>
 #include "Tiles/Tile.h"
 #include <SFML/Graphics.hpp>
+#include <vector>
+#include "TileReader.h"
 class Grid
 {
 public:
-
+	
 	std::vector<std::vector<std::unique_ptr<Tile>>> m_tiles;
 	sf::Texture m_tileSheetTexture;
 	Grid() {
@@ -16,7 +18,7 @@ public:
 		}
 		if (!m_tileSheetTexture.loadFromFile
 		("C:/Users/shahi/source/repos/game/game/Assets/Map/Prison/tiles/tilesheet.png"))
-		{
+		{ 
 			std::cout << "I wasnt able to load this \n"; abort();
 
 		}
@@ -49,12 +51,12 @@ public:
 				m_tiles[i][j]->sprite->setPosition(sf::Vector2f(posx, posy));
 				m_tiles[i][j]->sprite->setTextureRect(sf::IntRect({ {(int)j * 16, (int)i * 16}, {16, 16} }));
 				m_tiles[i][j]->sprite->setScale(sf::Vector2f(sx, sy));
-				posx += 16 * sx;
+				posx += mx;
 
 				
 			}
 			posx = 0;
-			posy += 16 * sy;
+			posy += my;
 		}
 	}
 	void Draw(sf::RenderWindow& window)

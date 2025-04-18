@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "../MapData.h"
+#include "MapData.h"
 
 class MapSaver
 {

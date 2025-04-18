@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "MouseTile.h"
 #include "Grid.h"
-#define MAP_SIZE 50
+#define MAP_SIZE 600
 
 
 class Map

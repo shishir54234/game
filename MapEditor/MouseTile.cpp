@@ -36,6 +36,9 @@ void MouseTile::Initialize()
 // we get the new images bounds in that rect
 void MouseTile::InitializeFromMapSelector(sf::IntRect rect)
 {
+	sf::Vector2i pos = rect.position;
+	m_currentTileID = 24 * pos.y + pos.x;
+
 	m_tile.setTextureRect(rect);
 	sf::Vector2f newSize = sf::Vector2f(m_tileScale.x/2,m_tileScale.y/2);
 	m_tile.setScale(newSize);

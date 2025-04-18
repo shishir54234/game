@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-
-struct MapData
+#include <vector>
+class MapData
 {
 private:
 	std::string m_tilesheet = "";
@@ -20,13 +20,13 @@ private:
 	int m_mapScaleY = 0;
 
 	int m_dataLength = 0;
-	const int* m_data = nullptr;
+	std::vector<int> m_data;
 
 public:
-	MapData(const std::string& tilesheet, const std::string& name,
+	MapData(std::string tilesheet, std::string name,
 		int mapPositionX, int mapPositionY, int cellSizeX, int cellSizeY,
 		int totalCellsX, int totalCellsY, int mapScaleX, int mapScaleY,
-		int dataLength, const int* data)
+		int dataLength, std::vector<int> data)
 	{
 		m_tilesheet = tilesheet;
 		m_name = name;
@@ -63,5 +63,5 @@ public:
 	inline const int& GetMapScaleY() const { return m_mapScaleY; }
 
 	inline const int& GetDataLength() const { return m_dataLength; }
-	inline const int* GetData() const { return m_data; }
+	inline const std::vector<int>& GetData() const { return m_data; }
 };

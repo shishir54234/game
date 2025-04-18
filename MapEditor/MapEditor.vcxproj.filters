@@ -30,7 +30,7 @@
     <ClCompile Include="MapSaver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
+    <ClCompile Include="GUI\Button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MapSelector.cpp">
@@ -53,10 +53,13 @@
     <ClInclude Include="MapSaver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Button.h">
+    <ClInclude Include="GUI\Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MapSelector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MapData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

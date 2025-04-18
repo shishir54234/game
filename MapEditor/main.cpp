@@ -4,6 +4,9 @@
 #include "Map.h"
 #include "MapSaver.h"
 #include "MapSelector.h"
+#include "Button.h"
+#include "MapData.h"
+
 #include <iostream>
 
 
@@ -13,21 +16,23 @@ int main()
     sf::ContextSettings settings;
     settings.antiAliasingLevel = 8;
     sf::RenderWindow window(sf::VideoMode({ 1920,1080 }), "RPG game", sf::Style::Default);
+    float wx = window.getSize().x;
+    float wy = window.getSize().y;
     // grid constructor ==> (topleftposition, cellsize, totalCells, scale, color)
     Grid grid1(
         sf::Vector2f(0, 0),
         sf::Vector2i(8, 8),
-        sf::Vector2i(10, 5),
+        sf::Vector2i(22, 7),
         sf::Vector2i(10, 10),
         sf::Color(255, 255, 255, 128),
         2);
 	std::cout << "Grid1 Position " << (grid1.GetTopRightBoundary()).x << " "
         << (grid1.GetTopRightBoundary()).y << std::endl;
     Grid grid2(
-        grid1.GetTopRightBoundary() + sf::Vector2f(50,0),
+        grid1.GetBottomLeftBoundary() + sf::Vector2f(0, 50),
         sf::Vector2i(8, 8),
-        sf::Vector2i(10, 5),
-        sf::Vector2i(10, 10),
+        sf::Vector2i(24, 12),
+        sf::Vector2i(6, 4),
         sf::Color(255, 255, 255, 128),
         2);
 
@@ -44,6 +49,10 @@ int main()
     
     Map map(grid1,mouseTile);
 	MapSelector mapSelector(grid2);
+    sf::Vector2f buttonposn = grid2.GetTopRightBoundary() + sf::Vector2f(0, 100);
+    Button button(buttonposn, sf::Vector2f(1, 1));
+    
+
 
     MapSaver mapsaver;
     // ------------------------------------INIT-------------------------------------------------
@@ -65,6 +74,7 @@ int main()
     /*
     mouseTile.Load();*/
     map.Load();
+    button.Load();
 
     sf::Clock clock;
     while (window.isOpen())
@@ -92,11 +102,39 @@ int main()
         map.Update(deltaTime, mousePosition);
         grid1.Update(deltaTime);
 		grid2.Update(deltaTime);
+		button.Update(deltaTime, mousePosition); 
+        if (button.IsPressed())
+        {
+            std::string place = "Assets/Map/prison/tilesheet.png";
+           MapData mapData(
+               "Assets/Map/prison/tilesheet.png",
+                "Level 1",
+                grid1.GetPosition().x,
+                grid1.GetPosition().y,
+                grid1.GetCellSize().x,
+                grid1.GetCellSize().y,
+                grid1.GetTotalCells().x,
+                grid1.GetTotalCells().y,
+                grid1.GetScale().x,
+                grid1.GetScale().y,
+                MAP_SIZE,
+                map.GetMapIDs());
+           std::vector<int> x = map.GetMapIDs();
+           for (auto& y : x)
+           {
+               std::cout << y << " ";
+           }
+            std::cout << grid1.GetSize().x << std::endl;
+            mapsaver.Save("TheXFile.rmap", mapData);
+
+            std::cout << "Saved map to file!" << std::endl;
+        }
 		// -------------------------UPDATE -------------------------------
 
 		// -------------------------DRAW -------------------------------
 
         window.clear(sf::Color::Black);
+        button.Draw(window);
         mapSelector.Draw(window);
         mouseTile.Draw(window);
         grid2.Draw(window);

@@ -20,13 +20,13 @@ void MapSelector::AddTilesToVector()
     int width = 16, height = 16;
 	m_width = width;
 	m_height = height;
-    for (int y = 0; y < 1; y++)
+    for (int y = 0; y < 12; y++)
     {
-        for (int x = 0; x < 10; x++)
+        for (int x = 0; x < 24; x++)
         {
-            int i = x + y * 10;
-         
-            
+            int i = x + y * 24;
+       
+
             sf::Sprite sprite(m_tilesheetTexture); // Use the stored texture
             
            
@@ -73,7 +73,7 @@ sf::IntRect MapSelector::GetClickedRect(
      int gy = (mousePosition.y - m_grid.GetPosition().y) / (m_grid.GetCellSize().y * m_grid.GetScale().y);
 
 
-     int i = gx + 10 * gy;
+     int i = gx + 24 * gy;
      return sf::IntRect({ gx * m_width, gy * m_height }, { m_width, m_height });
     
 }

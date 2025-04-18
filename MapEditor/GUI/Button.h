@@ -8,7 +8,7 @@
 		sf::Sprite* m_sprite;
 		sf::Texture m_texture;
 
-		const sf::Vector2f& m_position;
+		sf::Vector2f m_position;
 		const sf::Vector2f& m_scale;
 		const sf::Vector2f* m_mousePosition;
 
@@ -16,7 +16,7 @@
 		bool isMouseReleased;
 
 	public:
-		Button(const sf::Vector2f& position, const sf::Vector2f& scale);
+		Button(sf::Vector2f position, const sf::Vector2f& scale);
 		~Button();
 
 		void Initialize();
