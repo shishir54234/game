@@ -14,9 +14,9 @@ namespace GUI
 		sf::Color m_hoverColor; 
 		sf::Color m_activeColor;
 
-		Button(float x, float y, float width, float height, sf::Font* font, std::string text,
+		Button(sf::Vector2f pos, sf::Vector2f sz, sf::Font* font, std::string text,
 			sf::Color idleColor, sf::Color hoverColor, sf::Color ActiveColor);
-		~Button();
+		/*~Button();*/
 
 		//Functions 
 		bool AreWePressed(sf::Vector2f mousePos);

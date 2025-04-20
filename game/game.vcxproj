@@ -155,7 +155,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\State\MaineMenuState.cpp" />
+    <ClCompile Include="src\Map\MapViewer.cpp" />
+    <ClCompile Include="src\Components\Movement.cpp" />
+    <ClCompile Include="src\State\MainMenuState.cpp" />
     <ClCompile Include="src\State\GameState.cpp" />
     <ClCompile Include="src\GUI\Button.cpp" />
     <ClCompile Include="src\Map\Grid.cpp" />
@@ -173,7 +175,9 @@
     <ClCompile Include="src\State\State.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\State\MaineMenuState.h" />
+    <ClInclude Include="src\Map\MapViewer.h" />
+    <ClInclude Include="src\Components\Movement.h" />
+    <ClInclude Include="src\State\MainMenuState.h" />
     <ClInclude Include="src\State\GameState.h" />
     <ClInclude Include="src\GUI\Button.h" />
     <ClInclude Include="src\Map\Grid.h" />

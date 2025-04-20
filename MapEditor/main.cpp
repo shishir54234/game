@@ -4,7 +4,7 @@
 #include "Map.h"
 #include "MapSaver.h"
 #include "MapSelector.h"
-#include "Button.h"
+#include "GUI/Button.h"
 #include "MapData.h"
 
 #include <iostream>
@@ -22,8 +22,8 @@ int main()
     Grid grid1(
         sf::Vector2f(0, 0),
         sf::Vector2i(8, 8),
-        sf::Vector2i(22, 7),
-        sf::Vector2i(10, 10),
+        sf::Vector2i(44, 10),
+        sf::Vector2i(5, 5),
         sf::Color(255, 255, 255, 128),
         2);
 	std::cout << "Grid1 Position " << (grid1.GetTopRightBoundary()).x << " "
@@ -123,8 +123,8 @@ int main()
            for (auto& y : x)
            {
                std::cout << y << " ";
-           }
-            std::cout << grid1.GetSize().x << std::endl;
+           }/*
+            std::cout << grid1.GetSize().x << std::endl;*/
             mapsaver.Save("TheXFile.rmap", mapData);
 
             std::cout << "Saved map to file!" << std::endl;

@@ -1,13 +1,16 @@
 #include "Player.h"
 #include "../Math.h"
 #include <iostream>
-
-Player::Player(float width, float height) :playerSprite(playerTexture)
-
+//sf::Vector2f position = { 0,0 }, sf::Vector2f scale = { 1,1 }, sf::Vector2f size = { 1,1 }
+//, sf::Vector2f dimension = { 1,1 }
+Player::Player(sf::Vector2f size, sf::Vector2f position) :playerSprite(playerTexture)
+, Entity(position,sf::Vector2f(3,3), size)
 {
-    m_size = sf::Vector2f(width, height);
+    //sf::Vector2f maxvelocity, sf::Vector2f accelaration,
+    //sf::Vector2f decelaration
+    mvmt = new Movement(sf::Vector2f(1,1),sf::Vector2f(100,100), sf::Vector2f(0.2,0.2),sf::Vector2f(0.1,0.1));
 
-
+    m_size = size;
     m_boundingRectangle.setFillColor(sf::Color::Transparent);
     m_boundingRectangle.setOutlineColor(sf::Color::Red);
     m_boundingRectangle.setOutlineThickness(1);
@@ -22,9 +25,13 @@ void Player::Initialize()
 void Player::Load()
 {
 
-    if (!playerTexture.loadFromFile("Assets/Players/Texture/player_front_face.png"))
+    if (playerTexture.loadFromFile("Assets/Players/Texture/player_front_face.png"))
     {
-        std::cerr << "Error loading player texture" << std::endl;
+        std::cerr << "Player texture loaded succesfully" << std::endl;
+    }
+    else
+    {
+        std::cout << "You are in the player Load and the texture failed to load" << std::endl;
     }
     playerSprite.setTexture(playerTexture);
 
@@ -36,31 +43,19 @@ void Player::Load()
 void Player::Update(double deltaTime, Enemy &ene)
 {
     sf::Vector2f position = playerSprite.getPosition();
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-    {
-        playerSprite.setPosition(position + sf::Vector2f(1, 0)*(float)deltaTime * playerSpeed);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-    {
-        playerSprite.setPosition(position + sf::Vector2f(-1, 0) * (float)deltaTime * playerSpeed);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-    {
-        playerSprite.setPosition(position + sf::Vector2f(0, -1) * (float)deltaTime * playerSpeed);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-    {
-        playerSprite.setPosition(position + sf::Vector2f(0, 1) * (float)deltaTime * playerSpeed);
-    }
-    //----------------------------------------------
+    mvmt->move(position,deltaTime);
+    playerSprite.setPosition(position);
+    
+    // firing bullet logic code 
     fireRateTimer += deltaTime;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::X) and fireRateTimer>=maxFireRate)
     {
+        
         sf::RectangleShape bullet(sf::Vector2f(50.0f, 25.0f));
 		bullet.setPosition(playerSprite.getPosition());
-        //auto bdirection = ene.playerSprite.getPosition() - mouse;
-		sf::Vector2f bdirection = sf::Vector2f(sf::Mouse::getPosition().x, sf::Mouse::getPosition().y)-playerSprite.getPosition();
-		//
+		sf::Vector2f bdirection 
+            = sf::Vector2f(sf::Mouse::getPosition().x, sf::Mouse::getPosition().y)
+            -playerSprite.getPosition();
 		std::cout << bdirection.x << " " << bdirection.y << std::endl;
         bdirection = Math::NormalizeVector(bdirection);
         Bullet b = Bullet(bdirection, bullet, bulletspeed);
@@ -70,13 +65,12 @@ void Player::Update(double deltaTime, Enemy &ene)
     }
     
     std::vector<Bullet> vb;
+    // this logic has to be in gameState logic sort of cause this isnt entitie's logic 
     for (size_t i=0;i<bullets.size();i++)
-    {
-        /*if (ene.health > 0) 
-        {*/
-            
+    {       
             bullets[i].Update(deltaTime);
-            if (Math::DidRectCollide(bullets[i].shape.getGlobalBounds(), ene.playerSprite.getGlobalBounds()))
+            if (Math::DidRectCollide(bullets[i].shape.getGlobalBounds(), 
+                ene.playerSprite.getGlobalBounds()))
             {
                 ene.ChangeHealth(-10);
             }
@@ -84,7 +78,6 @@ void Player::Update(double deltaTime, Enemy &ene)
             {
                 vb.push_back(bullets[i]);
             }
-        //}
     }
 	
     bullets = vb;

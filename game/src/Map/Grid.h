@@ -36,28 +36,29 @@ public:
 
 		float sx = mx / float(16);
 		float sy = my / float(16);
-		std::cout << "Scale factor for x: " << sx << " y: " << sy << std::endl;
+		//std::cout << "Scale factor for x: " << sx << " y: " << sy << std::endl;
 		float posx = 0, posy = 0;
-		for (float i = 0; i < m_tiles.size(); i++)
-		{
-			for (float j = 0; j < m_tiles[i].size(); j++)
-			{
-				std::cout << "Position: " << posx << " " << posy << std::endl;
-				m_tiles[i][j] = std::make_unique<Tile>();
-				m_tiles[i][j]->id = i + j;
-				m_tiles[i][j]->position = sf::Vector2i(i, j);
-				m_tiles[i][j]->type = TileType::FLOOR;
-				m_tiles[i][j]->sprite = std::make_unique<sf::Sprite>(m_tileSheetTexture);
-				m_tiles[i][j]->sprite->setPosition(sf::Vector2f(posx, posy));
-				m_tiles[i][j]->sprite->setTextureRect(sf::IntRect({ {(int)j * 16, (int)i * 16}, {16, 16} }));
-				m_tiles[i][j]->sprite->setScale(sf::Vector2f(sx, sy));
-				posx += mx;
+		//for (float i = 0; i < m_tiles.size(); i++)
+		//{
+		//	for (float j = 0; j < m_tiles[i].size(); j++)
+		//	{
+		//		//std::cout << "Position: " << posx << " " << posy << std::endl;
+		//		m_tiles[i][j] = std::make_unique<Tile>();
+		//		m_tiles[i][j]->id = i + j;
+		//		m_tiles[i][j]->position = sf::Vector2i(i, j);
+		//		m_tiles[i][j]->type = TileType::FLOOR;
+		//		m_tiles[i][j]->sprite = std::make_unique<sf::Sprite>(m_tileSheetTexture);
+		//		m_tiles[i][j]->sprite->setPosition(sf::Vector2f(posx, posy));
+		//		m_tiles[i][j]->sprite->setTextureRect(sf::IntRect({ {(int)j * 16, (int)i * 16}, {16, 16} }));
+		//		m_tiles[i][j]->sprite->setScale(sf::Vector2f(sx, sy));
+		//		posx += mx;
 
-				
-			}
-			posx = 0;
-			posy += my;
-		}
+		//		
+		//	}
+		//	posx = 0;
+		//	posy += my;
+		//}
+
 	}
 	void Draw(sf::RenderWindow& window)
 	{

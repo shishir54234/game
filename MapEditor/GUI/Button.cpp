@@ -3,7 +3,7 @@
 
 
 	Button::Button(sf::Vector2f position, const sf::Vector2f& scale) :
-		m_position(position), m_scale(scale), m_mousePosition(nullptr), 
+		m_position(position), m_scale(scale), 
 		isMousePressed(false), isMouseReleased(false)
 	{
 	}
@@ -32,44 +32,39 @@
 		m_sprite->setScale(m_scale);
 	}
 
-	void Button::Update(double deltaTime, const sf::Vector2f& mousePosition)
+	void Button::Update(double deltaTime, sf::Vector2f mousePosition)
 	{
-		m_mousePosition = &mousePosition;
-		isMouseReleased = false;
+		m_mousePosition = mousePosition; // Store the actual value, not a pointer
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && !isMouseReleased)
-		{
-			isMousePressed = true;
-		}
-		else
-		{
-			if (isMousePressed)
-			{
-				isMouseReleased = true;
-				isMousePressed = false;
-			}
-		}
+		bool isMousePressedNow = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+
+		// Detect mouse release (was pressed last frame, but not pressed now)
+		isMouseReleased = m_wasMousePressedLastFrame && !isMousePressedNow;
+
+		// Store current state for next frame
+		m_wasMousePressedLastFrame = isMousePressedNow;
 	}
 
-    bool Button::IsPressed()  
-    {  
-       if (isMouseReleased)  
-       {  
-           sf::Vector2u size = (m_sprite->getTexture()).getSize();  
+	bool Button::IsPressed()
+	{
+		// Only check if the mouse was released over the button
+		if (isMouseReleased)
+		{
+			// Get button dimensions
+			sf::Vector2u size = m_sprite->getTexture().getSize();
+			sf::Vector2f endPosition = m_position + sf::Vector2f(
+				size.x * m_scale.x,
+				size.y * m_scale.y);
 
-           sf::Vector2f endPosition = sf::Vector2f(  
-               m_position.x + size.x * m_scale.x,  
-               m_position.y + size.y * m_scale.y);  
-
-           if (m_mousePosition->x >= m_position.x && m_mousePosition->x <= endPosition.x &&  
-               m_mousePosition->y >= m_position.y && m_mousePosition->y <= endPosition.y)  
-           {  
-               return true;  
-           }  
-       }  
-
-       return false;  
-    }
+			// Check if mouse is within button bounds
+			if (m_mousePosition.x >= m_position.x && m_mousePosition.x <= endPosition.x &&
+				m_mousePosition.y >= m_position.y && m_mousePosition.y <= endPosition.y)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
 	void Button::Draw(sf::RenderWindow& window)
 	{

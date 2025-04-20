@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <memory>
 #include <typeindex>
-
+#include "../Components/Movement.h"
 class Entity
 {
 public:
@@ -16,8 +16,7 @@ public:
 	sf::Vector2f m_dimension; // Dimension of the entity
 	sf::Vector2f m_size; // Size of the entity
 	bool alive = true; // Is the entity alive?
-	size_t m_id = 0;
-
+	size_t m_id = 0; 
     Entity(sf::Vector2f position = { 0,0 }, sf::Vector2f scale = { 1,1 }, sf::Vector2f size = { 1,1 }
         , sf::Vector2f dimension = { 1,1 }) 
     {

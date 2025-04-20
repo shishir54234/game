@@ -1,6 +1,7 @@
 #pragma once
 #include "Bullet.h"
 #include "Enemy.h"
+#include "../Components/Movement.h"
 #include <SFML/Graphics.hpp>
 class Player: public Entity
 {
@@ -15,7 +16,7 @@ class Player: public Entity
 	float scaleY = 3;
 */
 
-
+	Movement* mvmt;
 	float playerSpeed = 1.0f;
 	float fireRateTimer=0.0f;
 	float maxFireRate = 150;
@@ -24,7 +25,7 @@ class Player: public Entity
 public:
 	float health = 100;
 	sf::Sprite playerSprite;
-	Player(float width, float height);
+	Player(sf::Vector2f sz, sf::Vector2f position);
 	void Initialize(); // <-------- called once
 	void Load(); // <------ called once per App start
 	void Shoot( Bullet &);

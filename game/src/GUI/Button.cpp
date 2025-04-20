@@ -1,14 +1,14 @@
 #include "Button.h"
 namespace GUI
 {
-	Button::Button(float x, float y, float width, float height, sf::Font* font, std::string text,
+	Button::Button(sf::Vector2f pos, sf::Vector2f sz, sf::Font* font, std::string text,
 		sf::Color idleColor = sf::Color(52, 152, 219)
 		, sf::Color hoverColor = sf::Color(41, 128, 185)
 		, sf::Color ActiveColor = sf::Color(31, 97, 141)) : m_text(*font)
 	{
 		this->m_buttonstate = button_states::BTN_IDLE;
-		this->m_shape.setPosition(sf::Vector2f(x, y));
-		this->m_shape.setSize(sf::Vector2f(width, height));
+		this->m_shape.setPosition(pos);
+		this->m_shape.setSize(sz);
 
 
 		this->m_font = font;

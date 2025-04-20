@@ -16,9 +16,9 @@ int main()
     sf::RenderWindow window(sf::VideoMode({1920,1080}), "RPG game",sf::Style::Default);
     // ------------------------------------INIT-------------------------------------------------
     Enemy enemy;
-    Player player(32.0f,32.0f);
+    Player player(sf::Vector2f(32.0f, 32.0f), sf::Vector2f(0,0));
     FrameRate fr;
-    Map map;
+    Map map(sf::Vector2f(1920,1080));
 	TileReader tileReader;
     //MapLoader mapLoader;
     
@@ -28,17 +28,17 @@ int main()
     enemy.Initialize();
     player.Initialize();
     fr.Initialize();
-    map.Initialize();
+    
     //  ------------------------------------LOAD--------------
     player.Load();
     fr.Load();
     grid.Load(window);
     enemy.Load();
-    map.Load("Assets/Map/Prison/tiles/level1.rmap");
+    map.Load();
     tileReader.loadRMap("Assets/Map/Prison/tiles/TileClass.rmap");
+    float bulletspeed = 0.2;
     // ------------------------------------ENEMY-----------------------------------------------
     
-    1
     
 
     // -------------------------------------HERO--------------------------------------------------------------
@@ -47,9 +47,9 @@ int main()
     // -------------------------------------Calculate direction of the bullet --------------------------------
     /*sf::Vector2f direction = enemy.playerSprite.getPosition() - bullet.getPosition();
     direction = NormalizeVector(direction);*/
-    float bulletspeed = 0.2;
     
-
+    
+    map.Initialize();
     sf::Clock clock;
     while (window.isOpen())
     {
@@ -72,7 +72,7 @@ int main()
 
         window.clear(sf::Color::Green);
         
-        grid.Draw(window);
+        //grid.Draw(window);
         map.Draw(window);
 		fr.Draw(window);
         player.Draw(window);

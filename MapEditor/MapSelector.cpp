@@ -74,6 +74,7 @@ sf::IntRect MapSelector::GetClickedRect(
 
 
      int i = gx + 24 * gy;
+
      return sf::IntRect({ gx * m_width, gy * m_height }, { m_width, m_height });
     
 }

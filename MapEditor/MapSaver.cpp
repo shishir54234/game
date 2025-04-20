@@ -27,11 +27,11 @@ void MapSaver::Save(const std::string& filename, const MapData& mapData)
 	file << "dataLength=" << mapData.GetDataLength() << std::endl;
 	file << "data=" << std::endl;
 
-	for (size_t y = 0; y < 7; y++)
+	for (size_t y = 0; y < mapData.GetTotalCellsY(); y++)
 	{
-		for (size_t x = 0; x < 22; x++)
+		for (size_t x = 0; x < mapData.GetTotalCellsX(); x++)
 		{
-			int i = x + y * 10;
+			int i = x + y * mapData.GetTotalCellsX();
 			file << mapData.GetData()[i] << ",";
 		}
 		file << std::endl;

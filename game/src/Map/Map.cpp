@@ -1,8 +1,10 @@
 #include "Map.h"
 #include <iostream>
-
-Map::Map() : sprite(tileSheetTexture)
+#include <fstream>
+#include "TileReader.h"
+Map::Map(sf::Vector2f wsize) : sprite(tileSheetTexture)
 {
+    WindowSize = wsize;
 }
 Map::~Map()
 {
@@ -11,80 +13,216 @@ Map::~Map()
 void Map::Initialize()
 {
 	std::cout << "Map Initialized" << std::endl;
+    // i need to initialize the sprites here 
+    tileSheetTexture.loadFromFile("Assets/Map/Prison/tiles/tilesheet.png");
+    for (size_t i = 0; i <tileData.size() ; i++)
+    {
+        int x = (tileData[i] % 24);
+        int y = (tileData[i] / 24);
+        sf::Sprite spr(tileSheetTexture);
+        spr.setTextureRect(sf::IntRect({x*16,y*16}, {16,16}));
+        mapSprites.push_back(spr);
+    }
+    ClassifyTheTiles();
+    Gridify();
 }
+void Map::ClassifyTheTiles()
+{
+    TileReader tr;
+    tr.loadRMap();
+    for (int i = 0; i < tileData.size(); i++)
+    {
+        int x = (tileData[i] % 24);
+        int y = (tileData[i]/24);
+        Tiletypes.push_back(tr.grid[y][x]);
+    }
+}
+void Map::Gridify()
+{
+    // we keep some amount of
+    float sx=(WindowSize.x)/(16*22)
+        , sy=(WindowSize.y)/(16*10);
+    float px = 0, py = 0;
+    for (int i = 0; i < tileData.size(); i++)
+    {
+        mapSprites[i].setScale(sf::Vector2f(sx, sy));
+        mapSprites[i].setPosition(sf::Vector2f(px,py));
+        px += (sx*16);
+        if (px >= WindowSize.x) 
+        {
+            px = 0;
+            py += (sy * 16);
+        }
+    }
 
+}
 void Map::Load(std::string filename)
 {
- //   mapLoader.Load(filename, md);
-	//mapSprites.resize(md.dataLength,sprite);
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Failed to open map file: " << filename << std::endl;
+        return;
+    }
 
- //   if (!md.tilesheet.empty() && md.tilesheet.front() == '"' && md.tilesheet.back() == '"') {
- //       md.tilesheet = md.tilesheet.substr(1, md.tilesheet.size() - 2);
- //   }
- //   std::string fullPath = std::filesystem::absolute(md.tilesheet).string();
- //   std::cout << "Resolved absolute path: " << fullPath << std::endl;
- //   
- //   if (!tileSheetTexture.loadFromFile(fullPath))
- //   {
- //       std::cout << "ERROR: Could not load tilesheet.png" << std::endl;
- //       // Optionally, you might want to throw an exception or handle the error
- //   }
-	//
- //    std::cout << "TileSheet Loaded Successfully" << std::endl;
- //    std::cout << "Texture Size: " << tileSheetTexture.getSize().x << " x " << tileSheetTexture.getSize().y << std::endl;
- //    sprite.setTexture(tileSheetTexture);
- //    sprite.setPosition(sf::Vector2f(100, 100));
- //    sprite.setScale({ 3.0f,3.0f });
- //    totalTilesonWidth
-	//	 = tileSheetTexture.getSize().x / md.tileWidth;
- //    assert(totalTilesonWidth > 0);
- //    
-	// totalTilesY = tileSheetTexture.getSize().y / md.tileHeight;
-	// totalTilesX = tileSheetTexture.getSize().x / md.tileWidth;
- //    sprite.setTextureRect(sf::IntRect({ 0, 0 },
-	//	 { md.tileWidth, md.tileHeight }));
- //    tiles.resize(totalTilesX, std::vector<Tile>(totalTilesY));
-	// // Adding the differnt tiles to the sprites array
-	// for (int y = 0; y < totalTilesY; y++)
-	// {
-	//	 for (int x = 0; x < totalTilesX; x++)
-	//	 {
+    std::string line;
+    // Check if the first line is [Map]
+    std::getline(file, line);
+    if (line != "[Map]") {
+        std::cerr << "Invalid map format: missing [Map] header" << std::endl;
+        return;
+    }
 
+    // Parse metadata
+    std::unordered_map<std::string, std::string> metadata;
+    bool dataFlag = false;
 
-	//		 tiles[x][y].id = (x+(totalTilesX)*y);
-	//		 tiles[x][y].position = sf::Vector2i(x * md.tileWidth, y * md.tileHeight);
-	//	 }
-	// }
-	// for (int i = 0; i < mapSprites.size(); i++)
- //    {
- //            int index = md.data[i];
- //            int x = i % 3; int y = i / 3;
-	//		 int i1 = index % totalTilesonWidth;
-	//		 int i2 = index / totalTilesonWidth;
- //            mapSprites[i].setTexture(tileSheetTexture);
+    while (std::getline(file, line)) {
+        // Start reading tile data
+        if (dataFlag) {
+            parseTileData(line);
+            continue;
+        }
 
- //            mapSprites[i].setTextureRect(sf::IntRect({ 
- //                tiles[i1][i2].position.x,tiles[i1][i2].position.y}, {md.tileWidth,md.tileHeight}));
- //           
- //            mapSprites[i].setScale(sf::Vector2f(5, 5));
- //            mapSprites[i].setPosition(sf::Vector2f(x * md.tileWidth * 5, 100 + y * md.tileHeight * 5));
- //    
- //    }
+        // Check if we're starting the data section
+        if (line == "data=") {
+            dataFlag = true;
+            continue;
+        }
+
+        // Parse key=value pairs
+        size_t delimPos = line.find('=');
+        if (delimPos != std::string::npos) {
+            std::string key = line.substr(0, delimPos);
+            std::string value = line.substr(delimPos + 1);
+            metadata[key] = value;
+        }
+    }
+
+    // Apply the metadata to our map object
+    if (!applyMetadata(metadata)) {
+        return;
+    }
+
+    // Validate data length
+    if (tileData.size() != static_cast<size_t>(totalTilesX * totalTilesY)) {
+        std::cerr << "Map data length mismatch. Expected "
+            << totalTilesX * totalTilesY << " but got "
+            << tileData.size() << std::endl;
+        return;
+    }
+
+    return;
 
 }
+bool Map::applyMetadata(const std::unordered_map<std::string, std::string>& metadata) {
+    try {
+        // Set defaults or report errors for missing values
+        if (metadata.find("version") != metadata.end()) {
+            ///version = std::stoi(metadata.at("version"));
+        }
+        else {
+            std::cerr << "Missing 'version' in map data" << std::endl;
+            return false;
+        }
 
+        if (metadata.find("tilesheet") != metadata.end()) {
+            tilesheet = metadata.at("tilesheet");
+        }
+        else {
+            std::cerr << "Missing 'tilesheet' in map data" << std::endl;
+            return false;
+        }
+
+        // Extract other properties
+        mapName = metadata.count("mapName") ? metadata.at("mapName") : "Unnamed Map";
+        mapPositionX = metadata.count("mapPositionX") ? std::stoi(metadata.at("mapPositionX")) : 0;
+        mapPositionY = metadata.count("mapPositionY") ? std::stoi(metadata.at("mapPositionY")) : 0;
+
+        // Required properties for map sizing
+        if (metadata.find("cellSizeX") != metadata.end()) {
+            cellSizeX = std::stoi(metadata.at("cellSizeX"));
+        }
+        else {
+            std::cerr << "Missing 'cellSizeX' in map data" << std::endl;
+            return false;
+        }
+
+        if (metadata.find("cellSizeY") != metadata.end()) {
+            cellSizeY = std::stoi(metadata.at("cellSizeY"));
+        }
+        else {
+            std::cerr << "Missing 'cellSizeY' in map data" << std::endl;
+            return false;
+        }
+
+        if (metadata.find("totalCellsX") != metadata.end()) {
+            totalTilesX = std::stoi(metadata.at("totalCellsX"));
+        }
+        else {
+            std::cerr << "Missing 'totalCellsX' in map data" << std::endl;
+            return false;
+        }
+
+        if (metadata.find("totalCellsY") != metadata.end()) {
+            totalTilesY = std::stoi(metadata.at("totalCellsY"));
+        }
+        else {
+            std::cerr << "Missing 'totalCellsY' in map data" << std::endl;
+            return false;
+        }
+
+        mapScaleX = metadata.count("mapScaleX") ? std::stof(metadata.at("mapScaleX")) : 1.0f;
+        mapScaleY = metadata.count("mapScaleY") ? std::stof(metadata.at("mapScaleY")) : 1.0f;
+
+        if (metadata.find("dataLength") != metadata.end()) {
+            dataLength = std::stoi(metadata.at("dataLength"));
+        }
+        else {
+            std::cerr << "Missing 'dataLength' in map data" << std::endl;
+            return false;
+        }
+
+        return true;
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error parsing map metadata: " << e.what() << std::endl;
+        return false;
+    }
+}
+
+void Map::parseTileData(const std::string& line) {
+    std::stringstream ss(line);
+    std::string token;
+
+    while (std::getline(ss, token, ',')) {
+        // Skip empty tokens
+        if (token.empty()) {
+            continue;
+        }
+
+        try {
+            int tileId = std::stoi(token);
+            tileData.push_back(tileId);
+        }
+        catch (const std::exception& e) {
+            std::cerr << "Error parsing tile ID: " << token << " - " << e.what() << std::endl;
+        }
+    }
+}
 void Map::Update(double deltaTime)
 {
 	//std::cout << "Map Updated" << std::endl;
+
+
+
 }
 
 
 void Map::Draw(sf::RenderWindow& window)
 {
-    // Additional debug information
-   /**/
-
-    /*window.draw(sprite);*/
     for (size_t i = 0; i < mapSprites.size(); i++)
+    {
         window.draw(mapSprites[i]);
+
+    }      
 }

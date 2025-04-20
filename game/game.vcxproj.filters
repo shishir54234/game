@@ -60,7 +60,13 @@
     <ClCompile Include="src\State\State.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\State\MaineMenuState.cpp">
+    <ClCompile Include="src\State\MainMenuState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Components\Movement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Map\MapViewer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -116,7 +122,13 @@
     <ClInclude Include="src\State\State.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\State\MaineMenuState.h">
+    <ClInclude Include="src\State\MainMenuState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components\Movement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Map\MapViewer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

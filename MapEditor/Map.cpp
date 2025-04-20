@@ -30,7 +30,7 @@ void Map::Update(double deltaTime, const sf::Vector2f& mousePosition)
 		
 		assert(i < MAP_SIZE); 
 		auto x = m_mouseTile.GetSprite();
-		
+				
 		m_mapids[i] = m_mouseTile.GetCurrentTileID();
 		(m_mapSprites[i])=std::make_unique<sf::Sprite>(std::move(x));
 	}

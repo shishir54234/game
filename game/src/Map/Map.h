@@ -3,25 +3,40 @@
 #include "MapLoader.h"
 #include "MapData.h"
 #include <SFML/Graphics.hpp>
-
+#include "Tiles/Tile.h"
 
 class Map
 {
+	private:
 	sf::Texture tileSheetTexture;
 	sf::Sprite sprite;
 	int totalTiles;
 	int totalTilesonWidth; int totalTilesY,totalTilesX;
 	std::vector<std::vector<Tile>> tiles;
 	
-
+	std::vector<int> tileData;
 	MapLoader mapLoader;
 	MapData md;
 	std::vector<sf::Sprite> mapSprites;
+	std::vector<TileType> Tiletypes;
+	std::string tilesheet;
+	std::string mapName;
+	std::string dataLength;
+	int mapPositionX, mapPositionY;
+	int cellSizeX, cellSizeY;
+	int mapScaleX, mapScaleY;
+	sf::Vector2f WindowSize;
+		bool applyMetadata(const std::unordered_map<std::string, std::string>& metadata);
+		void parseTileData(const std::string& line);
+		
+		void ClassifyTheTiles();
+		void Gridify();
 	public:
-		Map();
+		Map(sf::Vector2f wsize);
 		~Map();
+		
 	void Initialize(); // <-------- called once
-	void Load(std::string filename); // <------ called once per App start
+	void Load(std::string filename= "C:/Users/shahi/source/repos/game/MapEditor/TheXFile.rmap"); // <------ called once per App start
 	void Update(double deltaTime);
 	void Draw(sf::RenderWindow&);
 };

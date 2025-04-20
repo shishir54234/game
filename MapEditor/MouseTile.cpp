@@ -36,9 +36,12 @@ void MouseTile::Initialize()
 // we get the new images bounds in that rect
 void MouseTile::InitializeFromMapSelector(sf::IntRect rect)
 {
+	
 	sf::Vector2i pos = rect.position;
-	m_currentTileID = 24 * pos.y + pos.x;
-
+	float x = (pos.x) / (rect.size.x);
+	float y = (pos.y) / (rect.size.y);
+	m_currentTileID = 24 * y + x;
+	
 	m_tile.setTextureRect(rect);
 	sf::Vector2f newSize = sf::Vector2f(m_tileScale.x/2,m_tileScale.y/2);
 	m_tile.setScale(newSize);
@@ -98,10 +101,10 @@ bool MouseTile::IsMouseClickedOnTile(
 		{
 			tilePosition = m_tile.getPosition();
 			gridPosition = m_tileGridPosition;
-			std::cout << "mtile position"
+			/*std::cout << "mtile position"
 				<< m_tile.getPosition().x << " " << m_tile.getPosition().y << std::endl;
 			std::cout << "mtile grid position" <<
-				m_tileGridPosition.x << " " << m_tileGridPosition.y << std::endl;
+				m_tileGridPosition.x << " " << m_tileGridPosition.y << std::endl;*/
 			return true;
 		}
 	}
