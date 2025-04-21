@@ -10,21 +10,21 @@ Map::~Map()
 {
 	std::cout << "Map Destroyed" << std::endl;
 }
+// in initalise we get the 
 void Map::Initialize()
 {
 	std::cout << "Map Initialized" << std::endl;
-    // i need to initialize the sprites here 
-    tileSheetTexture.loadFromFile("Assets/Map/Prison/tiles/tilesheet.png");
-    for (size_t i = 0; i <tileData.size() ; i++)
+    // initialise the tile ids
+    totalTilesY=std::stoi(metadata["totalCellsY"]), totalTilesX = std::stoi(metadata["totalCellsX"]);
+    tileids.resize(totalTilesY, std::vector<int>(totalTilesX));
+    int k = 0;
+    for (int i = 0; i < totalTilesY; i++)
     {
-        int x = (tileData[i] % 24);
-        int y = (tileData[i] / 24);
-        sf::Sprite spr(tileSheetTexture);
-        spr.setTextureRect(sf::IntRect({x*16,y*16}, {16,16}));
-        mapSprites.push_back(spr);
+        for (int j = 0; j < totalTilesX; j++)
+        {
+            tileids[i][j] = tileData[k++];
+        }
     }
-    ClassifyTheTiles();
-    Gridify();
 }
 void Map::ClassifyTheTiles()
 {
@@ -39,22 +39,7 @@ void Map::ClassifyTheTiles()
 }
 void Map::Gridify()
 {
-    // we keep some amount of
-    float sx=(WindowSize.x)/(16*22)
-        , sy=(WindowSize.y)/(16*10);
-    float px = 0, py = 0;
-    for (int i = 0; i < tileData.size(); i++)
-    {
-        mapSprites[i].setScale(sf::Vector2f(sx, sy));
-        mapSprites[i].setPosition(sf::Vector2f(px,py));
-        px += (sx*16);
-        if (px >= WindowSize.x) 
-        {
-            px = 0;
-            py += (sy * 16);
-        }
-    }
-
+    
 }
 void Map::Load(std::string filename)
 {
@@ -73,7 +58,7 @@ void Map::Load(std::string filename)
     }
 
     // Parse metadata
-    std::unordered_map<std::string, std::string> metadata;
+    
     bool dataFlag = false;
 
     while (std::getline(file, line)) {

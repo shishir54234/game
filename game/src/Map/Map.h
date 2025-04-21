@@ -8,17 +8,26 @@
 class Map
 {
 	private:
+		std::unordered_map<std::string, std::string> metadata;
+		std::vector<std::vector<Tile>> tiles;
+		std::vector<std::vector<int>> tileids;
+		int totalTilesY, totalTilesX;
+		int curViewStartX, curViewStartY;
+		int curViewEndX, curViewEndY;
+
+
 	sf::Texture tileSheetTexture;
 	sf::Sprite sprite;
 	int totalTiles;
-	int totalTilesonWidth; int totalTilesY,totalTilesX;
-	std::vector<std::vector<Tile>> tiles;
+	int totalTilesonWidth; 
+	
 	
 	std::vector<int> tileData;
 	MapLoader mapLoader;
 	MapData md;
 	std::vector<sf::Sprite> mapSprites;
 	std::vector<TileType> Tiletypes;
+	
 	std::string tilesheet;
 	std::string mapName;
 	std::string dataLength;
