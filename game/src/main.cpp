@@ -18,7 +18,8 @@ int main()
     Enemy enemy;
     Player player(sf::Vector2f(32.0f, 32.0f), sf::Vector2f(0,0));
     FrameRate fr;
-    Map map(sf::Vector2f(1920,1080));
+    std::string TileSheetString = "./Assets/Map/Prison/tiles/tilesheet.png";
+    Map map(sf::Vector2f(1920,1080), TileSheetString);
 	TileReader tileReader;
     //MapLoader mapLoader;
     

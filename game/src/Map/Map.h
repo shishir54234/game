@@ -9,15 +9,16 @@ class Map
 {
 	private:
 		std::unordered_map<std::string, std::string> metadata;
-		std::vector<std::vector<Tile>> tiles;
+		std::vector<std::vector<Tile*>> tiles;
 		std::vector<std::vector<int>> tileids;
 		int totalTilesY, totalTilesX;
 		int curViewStartX, curViewStartY;
 		int curViewEndX, curViewEndY;
+		int gridX = 22, gridY = 9;
 
 
 	sf::Texture tileSheetTexture;
-	sf::Sprite sprite;
+	
 	int totalTiles;
 	int totalTilesonWidth; 
 	
@@ -41,7 +42,7 @@ class Map
 		void ClassifyTheTiles();
 		void Gridify();
 	public:
-		Map(sf::Vector2f wsize);
+		Map(sf::Vector2f wsize, std::string& filename);
 		~Map();
 		
 	void Initialize(); // <-------- called once

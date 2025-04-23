@@ -13,7 +13,7 @@ private:
 	sf::Vector2f m_tilePosition;
 	sf::Vector2i m_tileGridPosition;
 	sf::Vector2f m_tileSize;
-	sf::Vector2i m_tileScale;
+	sf::Vector2f m_tileScale;
 	sf::Vector2f m_offset;
 
 	bool m_isMouseOnGrid;

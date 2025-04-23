@@ -12,7 +12,7 @@ private:
 	std::vector<std::unique_ptr<sf::Sprite>> tiles;
 	sf::Vector2f m_tilePosition;
 	sf::Texture m_tilesheetTexture;
-	int m_width, m_height;
+	float m_width, m_height;
 	
 public:
 	MapSelector(Grid& grid);

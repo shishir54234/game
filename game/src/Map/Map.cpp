@@ -2,8 +2,13 @@
 #include <iostream>
 #include <fstream>
 #include "TileReader.h"
-Map::Map(sf::Vector2f wsize) : sprite(tileSheetTexture)
+Map::Map(sf::Vector2f wsize, std::string&filename)
 {
+    if (tileSheetTexture.loadFromFile(filename))
+    {
+        std::cout << "Loaded succesfully\n"; 
+    }
+
     WindowSize = wsize;
 }
 Map::~Map()
@@ -17,6 +22,7 @@ void Map::Initialize()
     // initialise the tile ids
     totalTilesY=std::stoi(metadata["totalCellsY"]), totalTilesX = std::stoi(metadata["totalCellsX"]);
     tileids.resize(totalTilesY, std::vector<int>(totalTilesX));
+    tiles.resize(gridY, std::vector<Tile*>(gridX,nullptr));
     int k = 0;
     for (int i = 0; i < totalTilesY; i++)
     {
@@ -25,6 +31,8 @@ void Map::Initialize()
             tileids[i][j] = tileData[k++];
         }
     }
+    ClassifyTheTiles();
+    Gridify();
 }
 void Map::ClassifyTheTiles()
 {
@@ -39,6 +47,33 @@ void Map::ClassifyTheTiles()
 }
 void Map::Gridify()
 {
+    float posx = 0, posy = 0;
+    float RectWidth = (float)WindowSize.x / (float)gridX;
+    float RectHeight = (float)WindowSize.y / (float)gridY;
+    for (int i = 0; i < gridY;i++)
+    {
+        for (int j = 0; j < gridX;j++)
+        {
+            tiles[i][j] = new Tile();
+            tiles[i][j]->m_scale = sf::Vector2f(1.0,1.0f);
+            tiles[i][j]->m_boundingRectangle = sf::RectangleShape(sf::Vector2f(RectWidth,RectHeight));
+            tiles[i][j]->type = Tiletypes[i*24+j];
+            tiles[i][j]->id = tileids[i][j];
+
+            int i1 = (tileids[i][j]) / 24;
+            int j1 = (tileids[i][j]) % 24;
+            tiles[i][j]->sprite = std::make_unique<sf::Sprite>(tileSheetTexture);
+            std::cout << " Hey these are the coordinates" << j1 * 16 << " " << i1 * 16 << std::endl;
+            tiles[i][j]->sprite->setTextureRect(sf::IntRect({ j1 * 16,i1 * 16 }, {16,16}));
+            tiles[i][j]->sprite->setScale(sf::Vector2f(RectWidth/16.0f,RectHeight/16.0f));
+            tiles[i][j]->sprite->setPosition(sf::Vector2f(posx,posy));
+            
+            posx += RectWidth;
+        }
+        posx = 0;
+        posy += RectHeight;
+    
+    }
     
 }
 void Map::Load(std::string filename)
@@ -205,9 +240,11 @@ void Map::Update(double deltaTime)
 
 void Map::Draw(sf::RenderWindow& window)
 {
-    for (size_t i = 0; i < mapSprites.size(); i++)
+    for (int i = 0; i < gridY; i++)
     {
-        window.draw(mapSprites[i]);
-
-    }      
+        for (int j = 0; j < gridX; j++)
+        {
+            window.draw(*tiles[i][j]->sprite);
+        }
+    }
 }

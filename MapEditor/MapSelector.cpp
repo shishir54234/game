@@ -17,23 +17,23 @@ MapSelector::~MapSelector()
 void MapSelector::AddTilesToVector()
 {
     // we need to get the Tiles from the tilesheet and then we add it
-    int width = 16, height = 16;
+    float width = 16, height = 16;
 	m_width = width;
 	m_height = height;
-    for (int y = 0; y < 12; y++)
+    for (float y = 0; y < 12; y++)
     {
-        for (int x = 0; x < 24; x++)
+        for (float x = 0; x < 24; x++)
         {
-            int i = x + y * 24;
+            float i = x + y * 24;
        
 
             sf::Sprite sprite(m_tilesheetTexture); // Use the stored texture
             
            
-            sprite.setTextureRect(sf::IntRect({ x*width, y*height }, { width, height }));
+            sprite.setTextureRect(sf::IntRect({ (int)x*(int)width, (int)y*(int)height }, { (int)width, (int)height }));
             sf::Vector2f pos;
             
-			int g1 = m_grid.GetScale().x; int g2 = m_grid.GetScale().y;
+			float g1 = m_grid.GetScale().x; float g2 = m_grid.GetScale().y;
             pos.x = m_grid.GetOffset().x + x * m_grid.m_tileSize.x * (g1);
             pos.y = m_grid.GetOffset().y + y * m_grid.m_tileSize.y * (g2);
 
@@ -69,13 +69,13 @@ sf::IntRect MapSelector::GetClickedRect(
 {
     // only called after Clicked on Selector returns true
     
-     int gx = (mousePosition.x - m_grid.GetPosition().x) / (m_grid.GetCellSize().x * m_grid.GetScale().x);
-     int gy = (mousePosition.y - m_grid.GetPosition().y) / (m_grid.GetCellSize().y * m_grid.GetScale().y);
+     float gx = (mousePosition.x - m_grid.GetPosition().x) / (m_grid.GetCellSize().x * m_grid.GetScale().x);
+     float gy = (mousePosition.y - m_grid.GetPosition().y) / (m_grid.GetCellSize().y * m_grid.GetScale().y);
 
 
-     int i = gx + 24 * gy;
+     float i = gx + 24 * gy;
 
-     return sf::IntRect({ gx * m_width, gy * m_height }, { m_width, m_height });
+     return sf::IntRect({ (int)gx * (int)m_width, (int)gy * (int)m_height }, { (int)m_width, (int)m_height });
     
 }
 bool MapSelector::ClickedOnSelector(
