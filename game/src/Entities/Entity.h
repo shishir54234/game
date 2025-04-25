@@ -5,9 +5,13 @@
 #include <memory>
 #include <typeindex>
 #include "../Components/Movement.h"
+#include "Animation/AnimationComponent.h"
 class Entity
 {
 public:
+    AnimationComponent* animationComponent;
+
+
     std::unordered_map<std::type_index, std::shared_ptr<void>> m_components;
 	std::string name = "Default";
 	sf::Vector2f m_position;// Position of the entity

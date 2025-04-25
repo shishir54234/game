@@ -3,9 +3,16 @@
 #include "Enemy.h"
 #include "../Components/Movement.h"
 #include <SFML/Graphics.hpp>
+struct BulletLinkedList
+{
+	std::unique_ptr<Bullet> bullet;
+	BulletLinkedList* next;
+	BulletLinkedList(std::unique_ptr<Bullet> b) : bullet(std::move(b)), next(nullptr) {}
+	BulletLinkedList(std::unique_ptr<Bullet> b, BulletLinkedList* b1) : bullet(std::move(b)), next(b1) {}
+};
 class Player: public Entity
 {
-	std::vector<Bullet> bullets;
+	BulletLinkedList* bullets= nullptr;
 	sf::Texture playerTexture;
 	float bulletspeed = 1.0f;
 
@@ -21,7 +28,8 @@ class Player: public Entity
 	float fireRateTimer=0.0f;
 	float maxFireRate = 150;
 	// Attributes
-	
+	void AddBullet(sf::Vector2f dir1, const sf::RectangleShape& sha, float bul1);
+	void ManageBullets(double &deltaTime, Enemy& enemy);
 public:
 	float health = 100;
 	sf::Sprite playerSprite;

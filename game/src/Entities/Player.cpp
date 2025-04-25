@@ -22,10 +22,11 @@ void Player::Initialize()
 {
     
 }
+
 void Player::Load()
 {
 
-    if (playerTexture.loadFromFile("Assets/Players/Texture/player_front_face.png"))
+    if (playerTexture.loadFromFile("Assets/Players/Texture/spritesheet.png"))
     {
         std::cerr << "Player texture loaded succesfully" << std::endl;
     }
@@ -34,11 +35,73 @@ void Player::Load()
         std::cout << "You are in the player Load and the texture failed to load" << std::endl;
     }
     playerSprite.setTexture(playerTexture);
-
     float XIndex = 0,YIndex=0;
     playerSprite.setTextureRect(sf::IntRect({ (int)XIndex* (int)m_size.x,(int)YIndex* (int)m_size.y}, { (int)m_size.x,(int)m_size.y }));
     playerSprite.setScale(m_scale);
     playerSprite.setPosition(sf::Vector2f(1650, 800));
+    animationComponent = new AnimationComponent(playerSprite, playerTexture);
+
+    animationComponent->addAnimation("Fire", 10.f, 0, 3, 8, 3, 32, 32);
+}
+void Player::AddBullet(sf::Vector2f dir1, const sf::RectangleShape& sha, float bul1)
+{
+	if (bullets == nullptr)
+	{
+		bullets = new BulletLinkedList(std::make_unique<Bullet>(dir1, sha, bul1));
+	}
+	else
+	{
+		BulletLinkedList* b2 = bullets;
+		while (b2->next != nullptr)
+		{
+			b2 = b2->next;
+		}
+		b2->next = new BulletLinkedList(std::make_unique<Bullet>(dir1, sha, bul1));
+	}
+}
+void Player::ManageBullets(double &deltaTime, Enemy& enemy)
+{
+	// this logic has to be in gameState logic sort of cause this isnt entitie's logic 
+	BulletLinkedList* b2 = bullets;
+	BulletLinkedList* b2prev = nullptr;
+    BulletLinkedList* start=nullptr;
+	while (b2 != nullptr)
+	{
+		if (Math::DidRectCollide(b2->bullet->m_shape.getGlobalBounds(), 
+            enemy.m_boundingRectangle.getGlobalBounds()))
+		{
+            if (b2prev != nullptr)
+            {
+                b2prev->next = nullptr;
+            }
+		}
+		else if (b2->bullet->m_sprite.getPosition().x > 1920 || b2->bullet->m_sprite.getPosition().y > 1080
+			|| b2->bullet->m_sprite.getPosition().x < 0 || b2->bullet->m_sprite.getPosition().y < 0)
+		{
+			if (b2prev != nullptr)
+			{
+				b2prev->next = nullptr;
+			}
+			
+		}
+		else
+		{
+            if (b2prev == nullptr)
+            {
+                start = b2;
+            }
+            if (b2prev != nullptr)
+            {
+				b2prev->next = b2;
+            }
+            
+            b2prev = b2;
+			b2->bullet->Update(deltaTime);
+			
+		}
+		b2 = b2->next;
+	}
+    bullets = start;
 }
 void Player::Update(double deltaTime, Enemy &ene)
 {
@@ -48,40 +111,28 @@ void Player::Update(double deltaTime, Enemy &ene)
     
     // firing bullet logic code 
     fireRateTimer += deltaTime;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::X) and fireRateTimer>=maxFireRate)
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::X))
     {
-        
+		animationComponent->play("Fire", deltaTime);
         sf::RectangleShape bullet(sf::Vector2f(50.0f, 25.0f));
-		bullet.setPosition(playerSprite.getPosition());
+		
 		sf::Vector2f bdirection 
             = sf::Vector2f(sf::Mouse::getPosition().x, sf::Mouse::getPosition().y)
             -playerSprite.getPosition();
 		std::cout << bdirection.x << " " << bdirection.y << std::endl;
         bdirection = Math::NormalizeVector(bdirection);
-        Bullet b = Bullet(bdirection, bullet, bulletspeed);
-		bullets.push_back(b);
-
+        sf::FloatRect psz= playerSprite.getLocalBounds();
+		sf::Vector2f offset = sf::Vector2f(psz.size.x / 2, psz.size.y / 2);
+        bullet.setPosition(playerSprite.getPosition()+offset);
+        // go to the end 
+        AddBullet(bdirection, bullet, bulletspeed);
 		fireRateTimer = 0.0f;
     }
     
-    std::vector<Bullet> vb;
+    std::vector<std::unique_ptr<Bullet>> vb;
     // this logic has to be in gameState logic sort of cause this isnt entitie's logic 
-    for (size_t i=0;i<bullets.size();i++)
-    {       
-            bullets[i].Update(deltaTime);
-            if (Math::DidRectCollide(bullets[i].shape.getGlobalBounds(), 
-                ene.playerSprite.getGlobalBounds()))
-            {
-                ene.ChangeHealth(-10);
-            }
-            else 
-            {
-                vb.push_back(bullets[i]);
-            }
-    }
-	
-    bullets = vb;
-    vb.clear();
+    ManageBullets(deltaTime, ene);
+    
     m_boundingRectangle.setPosition(playerSprite.getPosition());
 }
 
@@ -98,8 +149,10 @@ void Player::Draw(sf::RenderWindow &w)
 {
     w.draw(playerSprite);
     w.draw(m_boundingRectangle);
-    for (auto& x : bullets)
+	BulletLinkedList* b2 = bullets;
+    while (b2 != nullptr)
     {
-		x.Draw(w);  
+		b2->bullet->Draw(w);
+		b2 = b2->next;
     }
 }

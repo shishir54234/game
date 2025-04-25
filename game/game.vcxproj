@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Entities\Animation\AnimationComponent.cpp" />
     <ClCompile Include="src\Map\MapViewer.cpp" />
     <ClCompile Include="src\Components\Movement.cpp" />
     <ClCompile Include="src\State\MainMenuState.cpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="src\State\State.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Entities\Animation\AnimationComponent.h" />
     <ClInclude Include="src\Map\MapViewer.h" />
     <ClInclude Include="src\Components\Movement.h" />
     <ClInclude Include="src\State\MainMenuState.h" />
