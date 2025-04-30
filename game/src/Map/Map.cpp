@@ -11,12 +11,20 @@ Map::Map(sf::Vector2f wsize, std::string&filename)
 
     WindowSize = wsize;
 }
+Map::Map(sf::Vector2f wsize)
+{
+	if (tileSheetTexture.loadFromFile("Assets/Map/Prison/tiles/tilesheet.png"))
+	{
+		std::cout << "Loaded succesfully\n";
+	}
+	WindowSize = wsize;
+}
 Map::~Map()
 {
 	std::cout << "Map Destroyed" << std::endl;
 }
 // in initalise we get the 
-void Map::Initialize()
+void Map::Load()
 {
 	std::cout << "Map Initialized" << std::endl;
     // initialise the tile ids
@@ -76,7 +84,7 @@ void Map::Gridify()
     }
     
 }
-void Map::Load(std::string filename)
+void Map::Initialize(std::string filename)
 {
     std::ifstream file(filename);
     if (!file.is_open()) {

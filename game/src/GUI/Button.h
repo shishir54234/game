@@ -7,15 +7,20 @@ namespace GUI
 	{
 	public:
 		short unsigned m_buttonstate;
+		sf::Vector2f m_pos;
+		sf::Vector2f m_sz;
 		sf::RectangleShape m_shape;
 		sf::Font* m_font;
 		sf::Text m_text;
 		sf::Color m_idleColor; 
 		sf::Color m_hoverColor; 
 		sf::Color m_activeColor;
-
+		sf::Sprite m_sprite;
+		sf::Texture m_texture;
 		Button(sf::Vector2f pos, sf::Vector2f sz, sf::Font* font, std::string text,
-			sf::Color idleColor, sf::Color hoverColor, sf::Color ActiveColor);
+			sf::Color idleColor = sf::Color(52, 152, 219)
+			, sf::Color hoverColor = sf::Color(41, 128, 185)
+			, sf::Color ActiveColor = sf::Color(31, 97, 141));
 		/*~Button();*/
 
 		//Functions 

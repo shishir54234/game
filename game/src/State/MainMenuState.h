@@ -8,9 +8,10 @@
 class MainMenuState: public State
 {
 private:
-    sf::RectangleShape background;
+    sf::Texture m_texture;
+	sf::Sprite m_background;
     sf::Font font;
-
+	sf::Vector2f m_WindowSize;
     std::map<std::string, std::unique_ptr<GUI::Button>> buttons;
 
     //Functions
@@ -26,7 +27,7 @@ public:
     void endState();
 
     void updateInput(const float& dt);
-    void updateButtons();
+    States updateButtons();
     void update(const float& dt);
     void renderButtons(sf::RenderTarget* target = NULL);
     void RenderWindow(sf::RenderWindow& window);

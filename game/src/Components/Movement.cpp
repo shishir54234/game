@@ -13,15 +13,30 @@ const sf::Vector2f& Movement::getVelocity() const
 {
 	return velocity;
 }
-void Movement::move(sf::Vector2f& position, const float& dt)
+void Movement::move(sf::Sprite&player, const float& dt)
 {
+	sf::Vector2f position = player.getPosition();
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
     {
+        
         position=(position + sf::Vector2f(velocity.x, 0) * (float)dt);
+        int new_current = 1;
+        if (new_current != current)
+        {
+            player.setScale(sf::Vector2f(-player.getScale().x, player.getScale().y));
+            current = new_current;
+        }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
     {
+        
         position = (position + sf::Vector2f(-velocity.x, 0) * (float)dt);
+        int new_current = -1;
+        if (new_current != current)
+        {
+            player.setScale(sf::Vector2f(-player.getScale().x, player.getScale().y));
+            current = new_current;
+        }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
     {
@@ -31,6 +46,7 @@ void Movement::move(sf::Vector2f& position, const float& dt)
     {
         position = (position + sf::Vector2f(0, velocity.y) * (float)dt);
     }
+    player.setPosition(position);
 
 }
 void Movement::update(const float& dt)

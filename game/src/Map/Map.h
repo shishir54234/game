@@ -43,10 +43,11 @@ class Map
 		void Gridify();
 	public:
 		Map(sf::Vector2f wsize, std::string& filename);
+		Map(sf::Vector2f wsize);
 		~Map();
 		
-	void Initialize(); // <-------- called once
-	void Load(std::string filename= "C:/Users/shahi/source/repos/game/MapEditor/TheXFile.rmap"); // <------ called once per App start
+	void Load(); // <-------- called once
+	void Initialize(std::string filename= "C:/Users/shahi/source/repos/game/MapEditor/TheXFile.rmap"); // <------ called once per App start
 	void Update(double deltaTime);
 	void Draw(sf::RenderWindow&);
 };

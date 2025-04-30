@@ -106,8 +106,8 @@ void Player::ManageBullets(double &deltaTime, Enemy& enemy)
 void Player::Update(double deltaTime, Enemy &ene)
 {
     sf::Vector2f position = playerSprite.getPosition();
-    mvmt->move(position,deltaTime);
-    playerSprite.setPosition(position);
+    mvmt->move(playerSprite,deltaTime);
+    
     
     // firing bullet logic code 
     fireRateTimer += deltaTime;
@@ -129,11 +129,13 @@ void Player::Update(double deltaTime, Enemy &ene)
 		fireRateTimer = 0.0f;
     }
     
-    std::vector<std::unique_ptr<Bullet>> vb;
     // this logic has to be in gameState logic sort of cause this isnt entitie's logic 
     ManageBullets(deltaTime, ene);
     
     m_boundingRectangle.setPosition(playerSprite.getPosition());
+    m_boundingRectangle.setScale(sf::Vector2f( 
+        abs(m_boundingRectangle.getScale().x)*(playerSprite.getScale().x/abs(playerSprite.getScale().x))
+        ,abs(m_boundingRectangle.getScale().y) * (playerSprite.getScale().y / abs(playerSprite.getScale().y))));
 }
 
 void Player::DrawUpdate()
