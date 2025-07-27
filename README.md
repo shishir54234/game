@@ -1,7 +1,7 @@
-Project in Development.
+## Project in Development.
 
 
-First Look:
+## First Look:
 
 
 Main Screens:
@@ -11,7 +11,7 @@ Main Screens:
 <img width="959" height="540" alt="Screenshot 2025-07-27 174505" src="https://github.com/user-attachments/assets/ce2cd01e-6ae2-4fb9-99fc-6b2992a4e60c" />
 
 
-Animations:
+## Animations:
 
 
 <img width="615" height="354" alt="image" src="https://github.com/user-attachments/assets/f14858a0-fafd-4bfc-8179-e3c5c1c63cd6" />
