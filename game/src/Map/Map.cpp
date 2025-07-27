@@ -2,7 +2,11 @@
 #include <iostream>
 #include <fstream>
 #include "TileReader.h"
-Map::Map(sf::Vector2f wsize, std::string&filename)
+
+
+
+template<typename Config>
+Map<Config>::Map(sf::Vector2f wsize, std::string&filename)
 {
     if (tileSheetTexture.loadFromFile(filename))
     {
@@ -11,7 +15,8 @@ Map::Map(sf::Vector2f wsize, std::string&filename)
 
     WindowSize = wsize;
 }
-Map::Map(sf::Vector2f wsize)
+template<typename Config>
+Map<Config>::Map(sf::Vector2f wsize)
 {
 	if (tileSheetTexture.loadFromFile("Assets/Map/Prison/tiles/tilesheet.png"))
 	{
@@ -19,16 +24,19 @@ Map::Map(sf::Vector2f wsize)
 	}
 	WindowSize = wsize;
 }
-Map::~Map()
+template<typename Config>
+Map<Config>::~Map()
 {
 	std::cout << "Map Destroyed" << std::endl;
 }
 // in initalise we get the 
-void Map::Load()
+template<typename Config>
+void Map<Config>::Load()
 {
 	std::cout << "Map Initialized" << std::endl;
     // initialise the tile ids
-    totalTilesY=std::stoi(metadata["totalCellsY"]), totalTilesX = std::stoi(metadata["totalCellsX"]);
+    totalTilesY=std::stoi(metadata["totalCellsY"]), 
+        totalTilesX = std::stoi(metadata["totalCellsX"]);
     tileids.resize(totalTilesY, std::vector<int>(totalTilesX));
     tiles.resize(gridY, std::vector<Tile*>(gridX,nullptr));
     int k = 0;
@@ -42,7 +50,8 @@ void Map::Load()
     ClassifyTheTiles();
     Gridify();
 }
-void Map::ClassifyTheTiles()
+template<typename Config>
+void Map<Config>::ClassifyTheTiles()
 {
     TileReader tr;
     tr.loadRMap();
@@ -50,10 +59,14 @@ void Map::ClassifyTheTiles()
     {
         int x = (tileData[i] % 24);
         int y = (tileData[i]/24);
+        
+
+
         Tiletypes.push_back(tr.grid[y][x]);
     }
 }
-void Map::Gridify()
+template<typename Config>
+void Map<Config>::Gridify()
 {
     float posx = 0, posy = 0;
     float RectWidth = (float)WindowSize.x / (float)gridX;
@@ -64,27 +77,41 @@ void Map::Gridify()
         {
             tiles[i][j] = new Tile();
             tiles[i][j]->m_scale = sf::Vector2f(1.0,1.0f);
-            tiles[i][j]->m_boundingRectangle = sf::RectangleShape(sf::Vector2f(RectWidth,RectHeight));
+            tiles[i][j]->m_boundingRectangle = 
+                sf::RectangleShape(sf::Vector2f(RectWidth,RectHeight));
             tiles[i][j]->type = Tiletypes[i*24+j];
             tiles[i][j]->id = tileids[i][j];
 
             int i1 = (tileids[i][j]) / 24;
             int j1 = (tileids[i][j]) % 24;
             tiles[i][j]->sprite = std::make_unique<sf::Sprite>(tileSheetTexture);
-            std::cout << " Hey these are the coordinates" << j1 * 16 << " " << i1 * 16 << std::endl;
             tiles[i][j]->sprite->setTextureRect(sf::IntRect({ j1 * 16,i1 * 16 }, {16,16}));
-            tiles[i][j]->sprite->setScale(sf::Vector2f(RectWidth/16.0f,RectHeight/16.0f));
+            tiles[i][j]->sprite->setScale(sf::Vector2f(RectWidth/32.0f,RectHeight/32.0f));
             tiles[i][j]->sprite->setPosition(sf::Vector2f(posx,posy));
             
-            posx += RectWidth;
+			tiles[i][j]->m_boundingRectangle.setPosition(sf::Vector2f(posx, posy));
+            tiles[i][j]->m_boundingRectangle.setFillColor(sf::Color::Transparent);
+            tiles[i][j]->m_boundingRectangle.setOutlineColor(sf::Color::Red);
+            tiles[i][j]->m_boundingRectangle.setOutlineThickness(1);
+            tiles[i][j]->m_boundingRectangle.setSize(sf::Vector2f({ 16,16 }));
+            tiles[i][j]->m_boundingRectangle.setScale(sf::Vector2f(RectWidth / 16.0f, 
+                RectHeight / 16.0f));
+			tiles[i][j]->m_position = sf::Vector2f(posx, posy);
+			tiles[i][j]->m_dimension = sf::Vector2f(RectWidth, RectHeight);
+			tiles[i][j]->id = tileids[i][j];
+			tiles[i][j]->m_size = sf::Vector2f(RectWidth, RectHeight);
+			tiles[i][j]->position = sf::Vector2i(j, i);
+            
+            posx += RectWidth/2.0f;
         }
         posx = 0;
-        posy += RectHeight;
+        posy += RectHeight / 2.0f;
     
     }
     
 }
-void Map::Initialize(std::string filename)
+template<typename Config>
+void Map<Config>::Initialize(std::string filename)
 {
     std::ifstream file(filename);
     if (!file.is_open()) {
@@ -142,7 +169,8 @@ void Map::Initialize(std::string filename)
     return;
 
 }
-bool Map::applyMetadata(const std::unordered_map<std::string, std::string>& metadata) {
+template<typename Config>
+bool Map<Config>::applyMetadata(const std::unordered_map<std::string, std::string>& metadata) {
     try {
         // Set defaults or report errors for missing values
         if (metadata.find("version") != metadata.end()) {
@@ -218,7 +246,8 @@ bool Map::applyMetadata(const std::unordered_map<std::string, std::string>& meta
     }
 }
 
-void Map::parseTileData(const std::string& line) {
+template<typename Config>
+void Map<Config>::parseTileData(const std::string& line) {
     std::stringstream ss(line);
     std::string token;
 
@@ -237,7 +266,9 @@ void Map::parseTileData(const std::string& line) {
         }
     }
 }
-void Map::Update(double deltaTime)
+
+template<typename Config>
+void Map<Config>::Update(double deltaTime)
 {
 	//std::cout << "Map Updated" << std::endl;
 
@@ -246,13 +277,20 @@ void Map::Update(double deltaTime)
 }
 
 
-void Map::Draw(sf::RenderWindow& window)
+template<typename Config>
+void Map<Config>::Draw(sf::RenderWindow& window)
 {
     for (int i = 0; i < gridY; i++)
     {
         for (int j = 0; j < gridX; j++)
         {
+
+
             window.draw(*tiles[i][j]->sprite);
+			window.draw(tiles[i][j]->m_boundingRectangle);
         }
     }
 }
+
+#include "../Settings/Config.h"
+template class Map<Config>;

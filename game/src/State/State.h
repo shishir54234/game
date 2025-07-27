@@ -13,13 +13,15 @@ enum States
 	PAUSE,
 	EXIT
 };
+
+template<typename Config>
 class State
 {
 private: 
 	
 protected:
 	
-	std::unique_ptr<std::map<std::string, int>> supportedKeys;
+	std::map<std::string, int>* supportedKeys;
 	std::map<std::string, int> keybinds;
 	bool quit;
 	std::vector<sf::Texture> textures;
@@ -29,11 +31,14 @@ protected:
 	virtual void initKeybinds() = 0;    
 public:
 	States m_identifyingState;
-	State(std::unique_ptr<std::map<std::string, int>> supportedKeys,
-		std::unique_ptr<std::stack<std::unique_ptr<State>>> states,  States identifyingState);
+	State(std::map<std::string, int>* supportedKeys,
+		std::stack<State<Config>*>* states,
+		States identifyingState=States::PAUSE);
 	virtual ~State();
 	virtual void update(const float& dt) = 0;
 	virtual States updateButtons() =0;
 	virtual void RenderWindow(sf::RenderWindow& window) =0;
 };
 
+#include "../Settings/Config.h"
+template class State<Config>;

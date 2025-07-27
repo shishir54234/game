@@ -11,8 +11,10 @@ public:
 	float timer;
 	int width, height;
 	sf::FloatRect startRect, currentRect, endRect;
-	Animation(sf::Sprite& sprite, sf::Texture& texture, float width, float height, float timer
-		, float start_frame_x, float start_frame_y, float frames_x, int frames_y)
+	Animation(sf::Sprite& sprite, sf::Texture& texture, 
+		float width, float height, float timer,
+		float start_frame_x, float start_frame_y, 
+		float frames_x, int frames_y)
 		: sprite(sprite), texture(texture), width(width), height(height), timer(timer)
 	{
 		std::cout << "Animation constructor called: start frame" << start_frame_x<<  " " 

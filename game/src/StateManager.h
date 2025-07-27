@@ -1,13 +1,16 @@
 #pragma once
 #include "State/MainMenuState.h"
 #include "State/GameState.h"
+
+template<typename Config>
 class StateManager
 {
-	GameState& gameState;
-	MainMenuState& mainMenuState;
-	State* currentState;
+	GameState<Config>& gameState;
+	MainMenuState<Config>& mainMenuState;
+	State<Config>* currentState;
 public:
-	StateManager(GameState& gameState, MainMenuState& mainMenuState)
+	StateManager(GameState<Config>& gameState, 
+		MainMenuState<Config>& mainMenuState)
 		: gameState(gameState), mainMenuState(mainMenuState) 
 	{
 		currentState = &mainMenuState;
@@ -34,11 +37,13 @@ public:
 
 			}
 			currentState->update(deltaTime);
-			if (currentState->updateButtons() == States::GAME and currentState->m_identifyingState != States::GAME)
+			if (currentState->updateButtons() == States::GAME and 
+				currentState->m_identifyingState != States::GAME)
 			{
 				currentState = &gameState;
 			}
-			else if (currentState->updateButtons() == States::MENU and currentState->m_identifyingState != States::MENU)
+			else if (currentState->updateButtons() == States::MENU and 
+				currentState->m_identifyingState != States::MENU)
 			{
 				currentState = &mainMenuState;
 			}

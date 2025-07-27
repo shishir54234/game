@@ -4,7 +4,7 @@
 #include "MapData.h"
 #include <SFML/Graphics.hpp>
 #include "Tiles/Tile.h"
-
+template<typename Config>
 class Map
 {
 	private:
@@ -21,8 +21,25 @@ class Map
 	
 	int totalTiles;
 	int totalTilesonWidth; 
-	
-	
+	inline bool isCollidable(TileType type) const {
+		return type == TileType::WALL || type == TileType::TRAP;
+	}
+	TileType getTileAt(int x, int y) const {
+		if (x < 0 || y < 0 || y >= tiles.size() || x >= tiles[0].size()) {
+			return TileType::WALL; // treat out-of-bounds as wall
+		}
+		return tiles[y][x]->type;
+	}
+
+	bool isWalkable(int x, int y) const {
+		return !isCollidable(getTileAt(x, y));
+	}
+
+	bool isWalkable(sf::Vector2f worldPosition) const {
+		int tileX = static_cast<int>(worldPosition.x /totalTilesX);
+		int tileY = static_cast<int>(worldPosition.y / totalTilesY);
+		return isWalkable(tileX, tileY);
+	}
 	std::vector<int> tileData;
 	MapLoader mapLoader;
 	MapData md;

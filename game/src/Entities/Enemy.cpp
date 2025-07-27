@@ -1,9 +1,13 @@
 #include "Enemy.h"
 #include <iostream>
-Enemy::Enemy() :playerSprite(playerTexture), healthText(font)
+
+template<typename Config>
+Enemy<Config>::Enemy(Map<Config> &map) :
+playerSprite(playerTexture), 
+healthText(font), m_map(map)
 {
-    m_scale = sf::Vector2f(3.0f, 3.0f);
-	m_size = sf::Vector2f(85.0f, 94.0f);
+    m_scale = Config::Entity::Enemy::ENEMY_SCALE;
+	m_size = Config::Entity::Enemy::ENEMY_SIZE;
 
 
 
@@ -13,21 +17,27 @@ Enemy::Enemy() :playerSprite(playerTexture), healthText(font)
     boundingRectangle.setSize(m_size);
     boundingRectangle.setScale(m_scale);
 }
-void Enemy::Initialize()
+template<typename Config>
+void Enemy<Config>::Initialize()
 {
 }
-void Enemy::Load()
+
+template<typename Config>
+void Enemy<Config>::Load()
 {     if (font.openFromFile("Assets/Font/arial.ttf"))
     {
         std::cout << "Arial.ttf font in Assets has been loaded successfully" << std::endl;
         healthText.setFont(font);
-        healthText.setCharacterSize(18);
+        healthText.setCharacterSize(Config::Entity::Enemy::CHAR_SIZE);
+
         healthText.setString(std::to_string((int)health));
         healthText.setPosition(playerSprite.getPosition());
     }
     else
     {
-        std::cout << "Failed to load Arial.ttf font in Assets" << std::endl;
+        std::cout 
+            << "Failed to load Arial.ttf font in Assets" 
+            << std::endl;
     }
     //sf::Texture enemyTexture("Assets/Enemy/Texture/mage-1-85x94.png");
     if (!playerTexture.loadFromFile("Assets/Enemy/Texture/mage-1-85x94.png"))
@@ -35,15 +45,17 @@ void Enemy::Load()
         std::cerr << "Error laoading player texture" << std::endl;
     }
     playerSprite.setTexture(playerTexture);
-
+   
     float XIndex = 0;
     float YIndex = 0;
-    playerSprite.setTextureRect(sf::IntRect({ (int)XIndex * (int)size.x,(int)YIndex * (int)size.y }, { (int)size.x,(int)size.y }));
+    playerSprite.setTextureRect(sf::IntRect({ (int)XIndex * (int)size.x,
+        (int)YIndex * (int)size.y }, 
+        { (int)m_size.x,(int)m_size.y }));
     playerSprite.setScale(m_scale);
-    playerSprite.setPosition(sf::Vector2f(400, 100));
+    playerSprite.setPosition(Config::Entity::Enemy::ENEMY_POSITION);
 }
-
-void Enemy::Update(double deltaTime)
+template<typename Config>
+void Enemy<Config>::Update(double deltaTime)
 {
     if (health > 0) 
     {
@@ -53,26 +65,26 @@ void Enemy::Update(double deltaTime)
     
 
 }
-
-void Enemy::Shoot()
+template<typename Config>
+void Enemy<Config>::Shoot()
 {
 }
-void Enemy::ChangeHealth(float damage)
+template<typename Config>
+void Enemy<Config>::ChangeHealth(float damage)
 {
     health += damage;
     healthText.setString(std::to_string(health));
 }
-void Enemy::DrawUpdate()
+
+template<typename Config>
+void Enemy<Config>::DrawUpdate()
 {
 }
-
-void Enemy::Draw(sf::RenderWindow& window)
+template<typename Config>
+void Enemy<Config>::Draw(sf::RenderWindow& window)
 {
-    if (health > 0)
-    {
-        window.draw(playerSprite);
-        window.draw(boundingRectangle);
-        window.draw(healthText);
-    }
+	window.draw(playerSprite);
 }
 
+#include "../Settings/Config.h"
+template class Enemy<Config>;

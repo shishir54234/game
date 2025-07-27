@@ -1,5 +1,5 @@
 #pragma once
-
+#include "../Managers/EntityManager.h"
 #include "../Entities/Entity.h"
 #include "../Entities/Player.h"
 #include "../Entities/Enemy.h"
@@ -9,17 +9,19 @@
 #include "../Map/Grid.h"
 #include "State.h"
 
-class GameState : public State
+
+template<typename Config>
+class GameState : public State < Config >
 {
 private:
     // Core game objects
-    Player player;
-    Enemy enemy;
+    Player<Config> player;
+    Enemy<Config> enemy;
     FrameRate fr;
     Grid grid;
-    Map map;
+    Map<Config> map;
     TileReader tileReader;
-
+	EntityManager<Config> entityManager;
     // Other variables
     float bulletSpeed;
 
@@ -28,16 +30,17 @@ private:
     void loadResources(sf::RenderWindow& window); // done
 
 public:
-    GameState(std::unique_ptr<std::map<std::string, int>> supportedKeys,
-        std::unique_ptr<std::stack<std::unique_ptr<State>>> states,
+    GameState(
+        std::map<std::string,int>* supportedKeys,
+        std::stack<State<Config>*>* states,
         sf::RenderWindow& window);
-    virtual ~GameState();
+    ~GameState();
 
     void endState(); // done
     void startGame(); // done
-	void initKeybinds() override;
+	void initKeybinds();
     //void UpdateInput(const float& dt) override;
     States updateButtons();
-    void update(const float& dt) override; // done
-    void RenderWindow(sf::RenderWindow& window) override;// done
+    void update(const float& dt); // done
+    void RenderWindow(sf::RenderWindow& window);// done
 };

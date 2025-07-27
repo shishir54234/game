@@ -5,25 +5,31 @@
 #include <stack>
 #include <map>
 #include <SFML/Graphics.hpp>
-class MainMenuState: public State
+
+
+template<typename Config>
+class MainMenuState : public State < Config>
 {
 private:
     sf::Texture m_texture;
 	sf::Sprite m_background;
     sf::Font font;
 	sf::Vector2f m_WindowSize;
-    std::map<std::string, std::unique_ptr<GUI::Button>> buttons;
+    std::map<std::string, std::unique_ptr<GUI::Button<Config>>> buttons;
+	sf::Font TitleFont;
 
+	sf::Text* m_titleText;
     //Functions
+    void initTitle();
     void initVariables();
     void initBackground();
     void initFonts();
     void initKeybinds();
     void initButtons();
 public:
-    MainMenuState(sf::Vector2f &WindowSize,
-        std::unique_ptr<std::map<std::string, int>> supportedKeys
-        , std::unique_ptr<std::stack< std::unique_ptr<State>>> states);
+    MainMenuState(sf::Vector2f WindowSize,
+        std::map<std::string, int>* supportedKeys
+        , std::stack< State<Config>*>* states);
     void endState();
 
     void updateInput(const float& dt);
@@ -32,4 +38,7 @@ public:
     void renderButtons(sf::RenderTarget* target = NULL);
     void RenderWindow(sf::RenderWindow& window);
 };
-//void RenderWindow(sf::RenderWindow& window)
+
+
+
+

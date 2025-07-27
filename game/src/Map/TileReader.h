@@ -17,6 +17,7 @@ public:
     // Grid to store tile types
     const int WIDTH = 12, HEIGHT = 24;
     std::vector<std::vector<TileType>> grid;
-    void loadRMap(const std::string& filename = "C:/Users/shahi/source/repos/game/game/Assets/Map/Prison/tiles/TileClass.rmap");
+    void loadRMap(const std::string& filename = 
+        "C:/Users/shahi/source/repos/game/game/Assets/Map/Prison/tiles/TileClass.rmap");
 };
 
